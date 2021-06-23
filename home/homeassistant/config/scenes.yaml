@@ -1,0 +1,51 @@
+- id: '1593472519737'
+  name: Kjellerstue kino
+  entities:
+    light.kjellerstue_lyspaere1:
+      min_mireds: 250
+      max_mireds: 454
+      friendly_name: kjellerstue-lyspære1
+      supported_features: 35
+      state: 'off'
+    light.kjellerstue_lyspaere2:
+      min_mireds: 250
+      max_mireds: 454
+      brightness: 2
+      color_temp: 454
+      friendly_name: kjellerstue-2
+      supported_features: 35
+      state: 'on'
+- id: '1606873924855'
+  name: Kjellerstue av
+  entities:
+    light.kjellerstue_lyspaere1:
+      min_mireds: 250
+      max_mireds: 454
+      friendly_name: kjellerstue-lyspære1
+      supported_features: 35
+      state: 'off'
+    light.kjellerstue_lyspaere2:
+      min_mireds: 250
+      max_mireds: 454
+      friendly_name: kjellerstue-2
+      supported_features: 35
+      state: 'off'
+- id: '1606874049818'
+  name: Kjellerstue maks
+  entities:
+    light.kjellerstue_lyspaere1:
+      min_mireds: 250
+      max_mireds: 454
+      brightness: 250
+      color_temp: 250
+      friendly_name: kjellerstue-lyspære1
+      supported_features: 35
+      state: 'on'
+    light.kjellerstue_lyspaere2:
+      min_mireds: 250
+      max_mireds: 454
+      brightness: 252
+      color_temp: 252
+      friendly_name: kjellerstue-2
+      supported_features: 35
+      state: 'on'

@@ -1,0 +1,122 @@
+- platform: template
+  sensors:
+
+    mill_spisestue_current_temp:
+      friendly_name: "Temperatur"
+      value_template: "{{ state_attr('climate.spisestue', 'current_temperature') }}"
+      icon_template: hass:thermometer
+      unit_of_measurement: "ºC"
+    mill_spisestue_setpoint_temp:
+      friendly_name: "Mål-temperatur"
+      value_template: "{{ state_attr('climate.spisestue', 'temperature') }}"
+      icon_template: hass:thermometer
+      unit_of_measurement: "ºC"
+    mill_spisestue_avg_room_temp:
+      friendly_name: "Gjennomsnitt temperatur"
+      value_template: "{{ state_attr('climate.spisestue', 'avg_room_temp') }}"
+      icon_template: hass:thermometer
+      unit_of_measurement: "ºC"
+    mill_spisestue_hvac_action:
+      friendly_name: "Modus"
+      value_template: "{{ state_attr('climate.spisestue', 'hvac_action') }}"
+      icon_template: hass:menu
+    mill_spisestue_heating_ind:
+      friendly_name: "Varmeindikator"
+      value_template: "{{ state_attr('climate.spisestue', 'heating') }}"
+      icon_template: hass:fire
+    mill_spisestue_open_window:
+      friendly_name: "Åpent windu"
+      value_template: "{{ state_attr('climate.spisestue', 'open_window') }}"
+      icon_template: hass:window-open  
+
+    mill_stue_current_temp:
+      friendly_name: "Temperatur"
+      value_template: "{{ state_attr('climate.stue', 'current_temperature') }}"
+      icon_template: hass:thermometer
+      unit_of_measurement: "ºC"
+    mill_stue_setpoint_temp:
+      friendly_name: "Mål-temperatur"
+      value_template: "{{ state_attr('climate.stue', 'temperature') }}"
+      icon_template: hass:thermometer
+      unit_of_measurement: "ºC"
+    mill_stue_avg_room_temp:
+      friendly_name: "Gjennomsnitt temperatur"
+      value_template: "{{ state_attr('climate.stue', 'avg_room_temp') }}"
+      icon_template: hass:thermometer
+      unit_of_measurement: "ºC"
+    mill_stue_hvac_action:
+      friendly_name: "Modus"
+      value_template: "{{ state_attr('climate.stue', 'hvac_action') }}"
+      icon_template: hass:menu
+    mill_stue_heating_ind:
+      friendly_name: "Varmeindikator"
+      value_template: "{{ state_attr('climate.stue', 'heating') }}"
+      icon_template: hass:fire
+    mill_stue_open_window:
+      friendly_name: "Åpent vindu"
+      value_template: "{{ state_attr('climate.stue', 'open_window') }}"
+      icon_template: hass:window-open  
+    mill_stue_fan_mode:
+      friendly_name: "Vifte"
+      value_template: "{{ state_attr('climate.stue', 'fan_mode') }}"
+      icon_template: hass:fan  
+  
+    mill_kjellerstue_current_temp:
+      friendly_name: "Temperatur"
+      value_template: "{{ state_attr('climate.kjellerstue', 'current_temperature') }}"
+      icon_template: hass:thermometer
+      unit_of_measurement: "ºC"
+    mill_kjellerstue_setpoint_temp:
+      friendly_name: "Mål-temperatur"
+      value_template: "{{ state_attr('climate.kjellerstue', 'temperature') }}"
+      icon_template: hass:thermometer
+      unit_of_measurement: "ºC"
+    mill_kjellerstue_avg_room_temp:
+      friendly_name: "Gjennomsnitt temperatur"
+      value_template: "{{ state_attr('climate.kjellerstue', 'avg_room_temp') }}"
+      icon_template: hass:thermometer
+      unit_of_measurement: "ºC"
+    mill_kjellerstue_hvac_action:
+      friendly_name: "Modus"
+      value_template: "{{ state_attr('climate.kjellerstue', 'hvac_action') }}"
+      icon_template: hass:menu
+    mill_kjellerstue_heating_ind:
+      friendly_name: "Varmeindikator"
+      value_template: "{{ state_attr('climate.kjellerstue', 'heating') }}"
+      icon_template: hass:fire
+    mill_kjellerstue_open_window:
+      friendly_name: "Åpent vindu"
+      value_template: "{{ state_attr('climate.kjellerstue', 'open_window') }}"
+      icon_template: hass:window-open  
+    mill_kjellerstue_fan_mode:
+      friendly_name: "Vifte"
+      value_template: "{{ state_attr('climate.kjellerstue', 'fan_mode') }}"
+      icon_template: hass:fan  
+
+    mill_kontor_current_temp:
+      friendly_name: "Temperatur"
+      value_template: "{{ state_attr('climate.kontor', 'current_temperature') }}"
+      icon_template: hass:thermometer
+      unit_of_measurement: "ºC"
+    mill_kontor_setpoint_temp:
+      friendly_name: "Mål-temperatur"
+      value_template: "{{ state_attr('climate.kontor', 'temperature') }}"
+      icon_template: hass:thermometer
+      unit_of_measurement: "ºC"
+    mill_kontor_avg_room_temp:
+      friendly_name: "Gjennomsnitt temperatur"
+      value_template: "{{ state_attr('climate.kontor', 'avg_room_temp') }}"
+      icon_template: hass:thermometer
+      unit_of_measurement: "ºC"
+    mill_kontor_hvac_action:
+      friendly_name: "Modus"
+      value_template: "{{ state_attr('climate.kontor', 'hvac_action') }}"
+      icon_template: hass:menu
+    mill_kontor_heating_ind:
+      friendly_name: "Varmeindikator"
+      value_template: "{{ state_attr('climate.kontor', 'heating') }}"
+      icon_template: hass:fire
+    mill_kontor_open_window:
+      friendly_name: "Åpent vindu"
+      value_template: "{{ state_attr('climate.kontor', 'open_window') }}"
+      icon_template: hass:window-open  

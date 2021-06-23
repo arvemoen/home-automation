@@ -1,0 +1,8 @@
+# Lys stue
+- platform: group
+  name: stue_light_group
+  entities:
+    - light.stuespots
+    - light.stuebord
+    - light.spisebord
+    - light.sofahjorne

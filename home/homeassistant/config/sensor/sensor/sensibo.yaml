@@ -1,0 +1,63 @@
+- platform: template
+  sensors:
+    sensibo_current_room_temp:
+      friendly_name: "Temperatur"
+      value_template: "{{ state_attr('climate.varmepumpe', 'current_temperature') }}"
+      icon_template: hass:thermometer
+      unit_of_measurement: "ºC"
+    sensibo_setpoint_temp:
+      friendly_name: "Mål-temperatur"
+      value_template: "{{ state_attr('climate.varmepumpe', 'temperature') }}"
+      icon_template: hass:thermometer
+      unit_of_measurement: "ºC"
+    sensibo_current_humidity:
+      friendly_name: "Fuktighet"
+      value_template: "{{ state_attr('climate.varmepumpe', 'current_humidity') }}"
+      icon_template: hass:water-percent
+      unit_of_measurement: "%"
+    sensibo_fan_mode:
+      friendly_name: "Vifte"
+      value_template: "{{ state_attr('climate.varmepumpe', 'fan_mode') }}"
+      icon_template: hass:fan
+    sensibo_swing_mode:
+      friendly_name: "Spjeld"
+      value_template: "{{ state_attr('climate.varmepumpe', 'swing_mode') }}"
+      icon_template: hass:code-tags
+
+    sensibo_fan_mode_f:
+      friendly_name: "Vifte"
+      value_template: >
+        {% set v = state_attr('climate.varmepumpe', 'fan_mode') %}
+        {% if v == 'quiet' %}
+          Stille
+        {% elif v == 'low' %}
+          Lav
+        {% elif v == 'medium' %}
+          Medium
+        {% elif v == 'high' %}
+          Høy
+        {% elif v == 'auto' %}
+          Auto
+        {% elif v == 'strong' %}
+          Sterk
+        {% else %}
+          Ukjent
+        {% endif %}
+      icon_template: hass:fan
+    sensibo_swing_mode_f:
+      friendly_name: "Svingmodus"
+      value_template: >
+        {% set s = state_attr('climate.varmepumpe', 'swing_mode') %}
+        {% if s == 'stopped' %}
+          Stopp
+        {% elif s == 'rangeFull' %}
+          Ned
+        {% elif s == 'horizontal' %}
+          Flatt
+        {% elif s == 'both' %}
+          Sving
+        {% else %}
+          Ukjent
+        {% endif %}
+      icon_template: hass:code-tags
+    

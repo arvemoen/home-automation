@@ -1,0 +1,4 @@
+# Gitignore settings for Mosquitto
+mosquitto.log
+mosquitto.db
+!mosquitto.conf

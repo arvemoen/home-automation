@@ -1,0 +1,5 @@
+- platform: entur_public_transport
+  stop_ids:
+    - !secret entur_nsr_1
+  number_of_departures: 4
+  

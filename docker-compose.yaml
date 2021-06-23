@@ -1,0 +1,47 @@
+version: '3.7'
+
+networks:
+  iot-net:
+    name: iot-net
+    driver: bridge      
+
+services:
+  homeassistant:
+    container_name: home-assistant
+    image: homeassistant/home-assistant:latest
+    ports:
+      - "8123:8123"
+    volumes:
+      - ./home/homeassistant/config:/config
+    networks: 
+      - iot-net
+    environment:
+      - TZ=Europe/Oslo 
+    restart: unless-stopped
+  mqtt:
+    container_name: mqtt
+    image: eclipse-mosquitto:1.6.14
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./home/mosquitto/config:/mosquitto/config
+      - ./home/mosquitto/log:/mosquitto/log
+      - ./home/mosquitto/data/:/mosquitto/data
+    networks: 
+      - iot-net  
+    restart: unless-stopped
+  esphome:
+    container_name: esphome
+    image: esphome/esphome:latest
+    privileged: true
+    ports:
+      - "6052:6052"
+    volumes:
+      - ./home/esphome/config:/config
+    # devices: 
+    #   - /dev/ttyUSB0:/dev/ttyUSB0
+    networks:
+      - iot-net
+    environment:
+      - ESPHOME_DASHBOARD_USE_PING=true   
+    restart: unless-stopped

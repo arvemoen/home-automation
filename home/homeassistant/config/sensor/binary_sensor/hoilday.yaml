@@ -1,0 +1,5 @@
+- platform: workday
+  country: 'NO'
+  name: Holiday
+  workdays: [holiday]
+  excludes: []

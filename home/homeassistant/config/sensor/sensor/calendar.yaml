@@ -1,0 +1,16 @@
+- platform: template
+  sensors:
+    holiday:
+      friendly_name: "Hellidag"
+      value_template: >
+        {% if states('calendar.helligdager_i_norge') == 'on' %}
+          {{state_attr('calendar.helligdager_i_norge', 'message') }}
+        {% endif %}
+      icon_template: mdi:calendar-star
+    birthday:
+      friendly_name: "Bursdag"
+      value_template: >
+        {% if states('calendar.bursdager') == 'on' %}
+          {{state_attr('calendar.bursdager', 'message') }}
+        {% endif %}
+      icon_template: mdi:calendar-star

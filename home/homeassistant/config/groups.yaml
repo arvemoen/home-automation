@@ -1,0 +1,27 @@
+climate_all:
+  entities:
+    - climate.stue
+    - climate.spisestue
+    - climate.kjellerstue
+    - climate.kontor
+    - climate.varmepumpe
+
+climate_open_door_affected:
+  entities:
+    - climate.stue
+    - climate.spisestue
+    - climate.kjellerstue
+
+all_doors:
+  entities:
+    - binary_sensor.balkongdor
+    - binary_sensor.sokkeldor
+    - binary_sensor.inngangsdor
+    - binary_sensor.uteboddor_contact_alarm
+    - binary_sensor.inneboddor_contact_alarm
+
+exterior_doors:
+  entities:
+    - binary_sensor.balkongdor
+    - binary_sensor.sokkeldor
+    - binary_sensor.inngangsdor    

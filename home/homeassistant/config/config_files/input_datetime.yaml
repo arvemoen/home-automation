@@ -1,0 +1,13 @@
+# Start of temp setback temperature period
+temp_setback_night_start_time:
+  name: Temp setback night start time
+  has_date: false
+  has_time: true
+  initial: '23:30'
+
+# End of temp setback temperature period
+temp_setback_night_end_time:
+  name: Temp setback night end time
+  has_date: false
+  has_time: true 
+  initial: '04:30'

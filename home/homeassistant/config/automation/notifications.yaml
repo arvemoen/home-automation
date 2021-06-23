@@ -1,0 +1,103 @@
+# New version of Home Assistant is available
+- alias: "Update notifications"
+  trigger:
+    platform: state
+    entity_id: binary_sensor.updater
+  action:
+    service: notify.mobile_app_arve_sin_iphone
+    data_template:
+      title: Ny hass vesion
+      message: "Home Assistant {{ state_attr('binary_sensor.updater', 'newest_version') }} er tilgjengelig"
+
+# Network speed dropped
+- alias: "Network speed notification"
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.real_speedtest_download
+    below: 100
+  action:
+    service: notify.mobile_app_arve_sin_iphone
+    data_template:
+      title: Netverkshastighet redusert 
+      message: "Nedlastingshastigheten er nå {{ states('sensor.real_speedtest_download') }} Mbps"
+# Network speed ok again
+- alias: "Network speed notification OK"
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.real_speedtest_download
+    above: 100
+  action:
+    service: notify.mobile_app_arve_sin_iphone
+    data_template:
+      title: Netverkshastighet er OK   
+      message: "Nedlastingshastigheten er nå {{ states('sensor.real_speedtest_download') }} Mbps"
+
+# Freezer high temperatue
+- alias: "Freezer temperature too high"
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.fryser_temperature
+    above: -18
+  action:
+    service: notify.mobile_app_arve_sin_iphone
+    data_template:
+      title: Temperatur i fryser er høy 
+      message: "Temperaturen er nå {{ states('sensor.fryser_temperature') }} ºC"
+# Freezer temperature back to normal"
+- alias: "Freezer temperature OK"
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.fryser_temperature
+    below: -18
+  action:
+    service: notify.mobile_app_arve_sin_iphone
+    data_template:
+      title: Temperatur i fryser er OK
+      message: "Temperaturen er nå {{ states('sensor.fryser_temperature') }} ºC"      
+
+# Toolshed low temperatue
+- alias: "Toolshed temperature too low"
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.utebod_temperature
+    below: 0
+  action:
+    service: notify.mobile_app_arve_sin_iphone
+    data_template:
+      title: Temperatur i utebod er lav 
+      message: "Temperaturen er nå {{ states('sensor.utebod_temperature') }} ºC"
+# Toolshed temperature back to normal"
+- alias: "Toolshed temperature OK"
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.utebod_temperature
+    above: 0
+  action:
+    service: notify.mobile_app_arve_sin_iphone
+    data_template:
+      title: Temperatur i utebod er OK    
+      message: "Temperaturen er nå {{ states('sensor.utebod_temperature') }} ºC"      
+      
+# Office high CO2
+- alias: "Office high CO2"
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.netatmo_ws1_stue_kontor_co2
+    above: 1500
+  action:
+    service: notify.mobile_app_arve_sin_iphone
+    data_template:
+      title: Høyt CO2-nivå på kontoret
+      message: "CO2-nivå er nå {{ states('sensor.netatmo_ws1_stue_kontor_co2') }} ppm"
+# Office CO2 back to normal"
+- alias: "Office CO2 OK"
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.netatmo_ws1_stue_kontor_co2
+    below: 1500
+  action:
+    service: notify.mobile_app_arve_sin_iphone
+    data_template:
+      title: CO2-nivå på kontoret er OK    
+      message: "CO2-nivå er nå {{ states('sensor.netatmo_ws1_stue_kontor_co2') }} ppm"      
+

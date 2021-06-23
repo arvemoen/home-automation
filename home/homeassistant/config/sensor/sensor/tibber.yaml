@@ -1,0 +1,104 @@
+- platform: template
+  sensors:
+    tibber_grid_company:
+      friendly_name: 'Netteier'
+      value_template: > 
+        {{ state_attr('sensor.electricity_price_hjem', 'grid_company') }}
+      icon_template: mdi:fuse
+    tibber_estimated_annual_consuption:
+      unit_of_measurement: 'kWh'
+      friendly_name: 'Estimert årlig forbruk'
+      value_template: >
+        {{ state_attr('sensor.electricity_price_hjem', 'estimated_annual_consumption') }}
+      icon_template: mdi:power-plug
+    # Formatted last meter consumption
+    tibber_last_meter_consumption_f:
+      unit_of_measurement: 'kWh'
+      friendly_name: 'Siste avleste målerstand'
+      value_template: >
+        {{ states('sensor.last_meter_consumption_hjem')|int }}
+      icon_template: mdi:power-plug
+    # Formatted accumulated cost
+    tibber_accumulated_cost_f:
+      friendly_name: 'Kostnad i dag'
+      unit_of_measurement: 'Kr'
+      value_template: >
+        {{'{0:,.2f}'.format( states('sensor.accumulated_cost_hjem')|float )}}
+      icon_template: mdi:currency-usd
+    tibber_max_price:
+      friendly_name: 'Max pris'
+      unit_of_measurement: 'kr/kWh'
+      value_template: > 
+        {{ state_attr('sensor.electricity_price_hjem', 'max_price') }}
+      icon_template: mdi:currency-usd
+    tibber_avg_price:
+      friendly_name: 'Gjennomsnittspris'
+      unit_of_measurement: 'kr/kWh'
+      value_template: >
+        {{ state_attr('sensor.electricity_price_hjem', 'avg_price') }}
+      icon_template: mdi:currency-usd
+    tibber_min_price:
+      friendly_name: 'Minimumspris'
+      unit_of_measurement: 'kr/kWh'
+      value_template: >
+        {{ state_attr('sensor.electricity_price_hjem', 'min_price') }}
+      icon_template: mdi:currency-usd
+    # Formatted accumulated consumption today
+    tibber_accumulated_consumption_f:
+      friendly_name: 'Forbruk i dag'
+      unit_of_measurement: 'kWh'
+      value_template: >
+        {{'{0:,.2f}'.format( states('sensor.accumulated_consumption_hjem')|float )}}
+      icon_template: mdi:power-plug
+    # Electricity costs pr. hour now
+    tibber_cost:
+      friendly_name: 'Kostnad nå'
+      unit_of_measurement: 'kr/t'
+      value_template: >
+        {{'{0:,.2f}'.format(states('sensor.power_hjem')|float * states('sensor.electricity_price_hjem')|float / 1000 )}}
+      icon_template: mdi:currency-usd
+    # Grid rent TENSIO Trondheim 2021: Calculated to ~0.27kr/h, 0.445kr/kWh
+    # grid rent per. hour = (kWH * 0.445) + 0.27
+    tibber_grid_rent:
+      friendly_name: 'Nettleie nå'
+      unit_of_measurement: 'kr/t'
+      value_template: > 
+        {{'{0:,.2f}'.format((states('sensor.power_hjem')|float / 1000 * 0.445) + 0.27)}}
+      icon_template: mdi:currency-usd
+    # Total electricity costs per. hour now (incl. grid rent)
+    # Grid rent TENSIO Trondheim 2021: Calculated to ~0.27kr/h, 0.445kr/kWh
+    # cost per. hour = kWh * (electricity price + 0.443) + 0.27
+    tibber_cost_total:
+      friendly_name: 'Total kostnad nå'
+      unit_of_measurement: 'kr/t'
+      value_template: > 
+        {{'{0:,.2f}'.format(states('sensor.power_hjem')|float / 1000 * (states('sensor.electricity_price_hjem')|float + 0.445) + 0.27)}}
+      icon_template: mdi:currency-usd
+    # Current price in øre/kWh
+    tibber_price_ore:
+      friendly_name: 'Strømpris nå'
+      unit_of_measurement: 'øre/kWh'
+      value_template: > 
+        {{'{0:,.1f}'.format(states('sensor.electricity_price_hjem')|float * 100 )}}
+      icon_template: mdi:currency-usd
+    # Current price formatted
+    tibber_price_f:
+      friendly_name: 'Strømpris nå'
+      unit_of_measurement: 'kr/kWh'
+      value_template: > 
+        {{'{0:,.2f}'.format(states('sensor.electricity_price_hjem')|float )}}
+      icon_template: mdi:currency-usd
+    # Total current amps
+    tibber_amps_total:
+      friendly_name: 'Total strøm nå'
+      unit_of_measurement: 'A'
+      value_template: >
+        {{'{0:,.2f}'.format( states('sensor.current_l1_hjem')|float + states('sensor.current_l2_hjem')|float + states('sensor.current_l3_hjem')|float )}}
+      icon_template: mdi:current-ac
+    # Current power in KW
+    tibber_power_kw:
+      friendly_name: 'Forbruk nå'
+      unit_of_measurement: 'kW'
+      value_template: > 
+        {{'{0:,.2f}'.format(states('sensor.power_hjem')|float / 1000)}}
+      icon_template: mdi:power-plug

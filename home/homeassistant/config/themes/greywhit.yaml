@@ -1,0 +1,6 @@
+GreyWhite:
+  primary-color: darkgrey
+  paper-item-icon-color: darkgrey
+  paper-slider-knob-color: darkgrey
+  paper-slider-active-color: darkgrey
+  paper-toggle-button-checked-button-color: darkgrey

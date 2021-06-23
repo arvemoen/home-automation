@@ -1,0 +1,18 @@
+- platform: template
+  # Telldus temperature/humidity sersors battery level
+  sensors:
+    telldus_fryser_battery:
+      friendly_name: 'Fryser temp. sensor batterinivå'
+      unit_of_measurement: '%'
+      value_template: > 
+        {{ state_attr('sensor.fryser_temperature', 'battery_level') }}
+    telldus_ute_battery:
+      unit_of_measurement: '%'
+      friendly_name: 'Ute temp. sensor batterinivå'
+      value_template: > 
+        {{ state_attr('sensor.ute_temperature', 'battery_level') }}
+    telldus_kjellerstue_battery:
+      unit_of_measurement: '%'
+      friendly_name: 'Kjellerstue temp. sensor batterinivå'
+      value_template: > 
+        {{ state_attr('sensor.kjellerstue_temperature', 'battery_level') }}

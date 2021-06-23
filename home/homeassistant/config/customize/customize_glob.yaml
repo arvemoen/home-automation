@@ -1,0 +1,21 @@
+# Global customization
+  
+# Customize entities matching a pattern
+"binary_sensor.*dor*":  
+  device_class: door
+  state-color: true
+"binary_sensor.*contact_alarm":  
+  device_class: door
+  state-color: true
+"binary_sensor.*motion_alarm":  
+  device_class: motion
+  state-color: true
+"binary_sensor.*tamper_alarm":  
+  device_class: safety
+  state-color: true  
+"lock.*las":  
+  device_class: lock
+  state-color: true  
+"*battery*":
+  device_class: battery
+  state-color: true

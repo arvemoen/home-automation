@@ -1,0 +1,78 @@
+# Start time period
+- alias: "Temperature setback night start"
+  trigger:
+    - platform: template
+      value_template: "{{ states('sensor.time')[0:5] == states('input_datetime.temp_setback_night_start_time')[0:5] }}"
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: input_boolean.temp_setback_night_switch
+        state: 'on'
+      - condition: state
+        entity_id: input_boolean.temp_setback_night_state
+        state: 'off'
+      - condition: time
+        weekday:
+        - sun
+        - mon
+        - tue
+        - wed
+        - thu
+        - fri
+  action:
+    - service: input_boolean.turn_on 
+      entity_id: input_boolean.temp_setback_night_state
+    - service: climate.set_temperature
+      data_template:
+        entity_id:
+          - climate.varmepumpe
+        temperature: "{{ states('sensor.sensibo_setpoint_temp') | int - states('input_number.slider_temp_setback_night') | int }}"
+    - service: climate.set_temperature
+      data_template:
+        entity_id:
+          - climate.spisestue
+        temperature: "{{ states('sensor.mill_spisestue_setpoint_temp') | int - states('input_number.slider_temp_setback_night') | int }}"
+    - service: climate.set_temperature
+      data_template:
+        entity_id:
+          - climate.stue
+        temperature: "{{ states('sensor.mill_stue_setpoint_temp') | int - states('input_number.slider_temp_setback_night') | int }}"  
+        
+# End time period
+- alias: "Temperature setback night end"
+  trigger:
+    - platform: template
+      value_template: "{{ states('sensor.time')[0:5] == states('input_datetime.temp_setback_night_end_time')[0:5] }}"
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: input_boolean.temp_setback_night_state
+        state: 'on'
+      - condition: time
+        weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - fri
+        - sat
+  action:
+    - service: input_boolean.turn_off 
+      entity_id: input_boolean.temp_setback_night_state
+    - service: climate.set_temperature
+      data_template:
+        entity_id:
+          - climate.varmepumpe
+        temperature: "{{ states('sensor.sensibo_setpoint_temp') | int + states('input_number.slider_temp_setback_night') | int }}"
+    - service: climate.set_temperature
+      data_template:
+        entity_id:
+          - climate.spisestue
+        temperature: "{{ states('sensor.mill_spisestue_setpoint_temp') | int + states('input_number.slider_temp_setback_night') | int }}"
+    - service: climate.set_temperature
+      data_template:
+        entity_id:
+          - climate.stue
+        temperature: "{{ states('sensor.mill_stue_setpoint_temp') | int + states('input_number.slider_temp_setback_night') | int }}"  

@@ -1,0 +1,20 @@
+broker: !secret mqtt_broker
+port: !secret mqtt_port
+# client_id: !secret mqtt_client
+# username: !secret mqtt_user
+# password: !secret mqtt_passwd
+
+# Discover mqtt sensor configuration and topics from Homey running the "MQTT Hub" app.
+# See: https://community.athom.com/t/tutorial-setting-up-mqtt-on-homey-for-configuring-home-assistant-for-dashboard-purposes/10880
+discovery: true
+discovery_prefix: !secret mqtt_discovery_prefix
+
+# Set birth and last will messages
+birth_message:
+  topic: "hass/status"
+  payload: "online"
+  retain: true
+will_message:
+  topic: "hass/status"
+  payload: "offline"
+  retain: true
