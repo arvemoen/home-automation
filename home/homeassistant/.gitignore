@@ -7,12 +7,14 @@
 *.key
 *.pyc
 OZW_Log.txt
-home-assistant.log
+home-assistant.log*
 home-assistant_v2*.db*
 *.db-journal
 lib
 deps
 tts
+www
+custom_components
 secrets.yaml
 known_devices.yaml
 google_calendars.yaml

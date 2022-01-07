@@ -4,6 +4,7 @@
     platform: state
     entity_id: group.exterior_doors
     from: 'off'
+    to: 'on'
     for:
       minutes: 5
   condition:
@@ -26,6 +27,7 @@
     platform: state
     entity_id: group.exterior_doors
     from: 'on'
+    to: 'off'
   condition:
     - condition: state
       entity_id: group.exterior_doors 

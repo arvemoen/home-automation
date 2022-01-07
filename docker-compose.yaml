@@ -3,9 +3,15 @@ version: '3.7'
 networks:
   iot-net:
     name: iot-net
-    driver: bridge      
-
+    driver: bridge  
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.19.0.0/24
+          gateway: 172.19.0.1
+    
 services:
+  
   homeassistant:
     container_name: home-assistant
     image: homeassistant/home-assistant:latest
@@ -18,9 +24,10 @@ services:
     environment:
       - TZ=Europe/Oslo 
     restart: unless-stopped
+
   mqtt:
     container_name: mqtt
-    image: eclipse-mosquitto:1.6.14
+    image: eclipse-mosquitto:latest
     ports:
       - "1883:1883"
     volumes:
@@ -28,8 +35,11 @@ services:
       - ./home/mosquitto/log:/mosquitto/log
       - ./home/mosquitto/data/:/mosquitto/data
     networks: 
-      - iot-net  
+      - iot-net
+    environment:
+      - TZ=Europe/Oslo  
     restart: unless-stopped
+  
   esphome:
     container_name: esphome
     image: esphome/esphome:latest
@@ -38,10 +48,11 @@ services:
       - "6052:6052"
     volumes:
       - ./home/esphome/config:/config
-    # devices: 
-    #   - /dev/ttyUSB0:/dev/ttyUSB0
     networks:
       - iot-net
     environment:
-      - ESPHOME_DASHBOARD_USE_PING=true   
+      - TZ=Europe/Oslo
+      - ESPHOME_DASHBOARD_USE_PING=true
+      - USERNAME=${ESPHOME_USERNAME}
+      - PASSWORD=${ESPHOME_PASSWORD}   
     restart: unless-stopped

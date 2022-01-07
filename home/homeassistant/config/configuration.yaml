@@ -19,6 +19,9 @@ homeassistant:
   
   # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
   time_zone: Europe/Oslo
+
+  # Currency
+  currency: NOK
   
   # customization
   customize: !include customize/customize.yaml
@@ -30,13 +33,20 @@ homeassistant:
   
   # Allow external urls
   # allowlist_external_urls:
-  #   - "http://images.com/image1.png"
+  #   - "http://images.com/image1.png"  
 
+# http config (for reverse proxy)
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 172.19.0.1     # IP address of the gateway of the docker iot-net network.
 
 # Enables the frontend
 #frontend: !include config_files/frontend.yaml
 frontend: 
   themes: !include_dir_merge_named themes/
+  extra_module_url:
+    - /hacsfiles/lovelace-card-mod/card-mod.js
 
 # Enables configuration UI
 config:
@@ -48,12 +58,12 @@ updater:
   # include_used_components: true
 
 # Discover some devices automatically
-discovery:
+# discovery:
 
 # Allows you to issue voice commands from the frontend in enabled browsers
 # conversation:
 
-# Homa assitant database storage
+# Home assitant database storage
 recorder:
   purge_keep_days: 7  
 
@@ -104,10 +114,11 @@ input_datetime: !include config_files/input_datetime.yaml
 input_select: !include config_files/input_select.yaml
 netatmo: !include config_files/netatmo.yaml  
 verisure: !include config_files/verisure.yaml
-climate: !include config_files/sensibo.yaml
 air_quality: !include config_files/air_quality.yaml
 mqtt: !include config_files/mqtt.yaml
 tradfri: !include config_files/tradfri.yaml
+climate: !include config_files/climate.yaml
+duckdns: !include config_files/duckdns.yaml
 
 # Sensor
 sensor: !include_dir_merge_list sensor/sensor/

@@ -1,8 +1,15 @@
 # Lys stue
+
+- platform: switch
+  name: vitrineskap
+  entity_id: switch.vitrineskap
+
 - platform: group
-  name: stue_light_group
+  name: stue_lights
   entities:
     - light.stuespots
     - light.stuebord
     - light.spisebord
     - light.sofahjorne
+    - light.vitrineskap
+    

@@ -1,34 +1,6 @@
 - platform: template
   sensors:
 
-    mill_spisestue_current_temp:
-      friendly_name: "Temperatur"
-      value_template: "{{ state_attr('climate.spisestue', 'current_temperature') }}"
-      icon_template: hass:thermometer
-      unit_of_measurement: "ºC"
-    mill_spisestue_setpoint_temp:
-      friendly_name: "Mål-temperatur"
-      value_template: "{{ state_attr('climate.spisestue', 'temperature') }}"
-      icon_template: hass:thermometer
-      unit_of_measurement: "ºC"
-    mill_spisestue_avg_room_temp:
-      friendly_name: "Gjennomsnitt temperatur"
-      value_template: "{{ state_attr('climate.spisestue', 'avg_room_temp') }}"
-      icon_template: hass:thermometer
-      unit_of_measurement: "ºC"
-    mill_spisestue_hvac_action:
-      friendly_name: "Modus"
-      value_template: "{{ state_attr('climate.spisestue', 'hvac_action') }}"
-      icon_template: hass:menu
-    mill_spisestue_heating_ind:
-      friendly_name: "Varmeindikator"
-      value_template: "{{ state_attr('climate.spisestue', 'heating') }}"
-      icon_template: hass:fire
-    mill_spisestue_open_window:
-      friendly_name: "Åpent windu"
-      value_template: "{{ state_attr('climate.spisestue', 'open_window') }}"
-      icon_template: hass:window-open  
-
     mill_stue_current_temp:
       friendly_name: "Temperatur"
       value_template: "{{ state_attr('climate.stue', 'current_temperature') }}"

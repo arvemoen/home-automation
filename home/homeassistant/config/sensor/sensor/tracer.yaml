@@ -1,0 +1,81 @@
+- platform: template
+  sensors:
+    tracer_uptime_relative:
+      friendly_name: Tracer uptime relative
+      value_template: > 
+        {{ relative_time( now() - timedelta( seconds = states('sensor.tracer_uptime').rstrip('seconds') | int )) }}
+      icon_template: mdi:clock
+
+    tracer_last_changed_relative:
+      friendly_name: Tracer last changed relative
+      value_template: > 
+        {{ relative_time(states.sensor.tracer_uptime.last_changed) }}
+      icon_template: mdi:clock
+    tracer_last_changed_formatted:
+      friendly_name: Tracer last changed formatted
+      value_template: > 
+        {{ as_timestamp(states.sensor.tracer_uptime.last_changed) | timestamp_custom('%H:%M:%S') }}
+      icon_template: mdi:clock
+  
+    tracer_charging_mode_text:
+      friendly_name: Tracer charging mode text
+      value_template: >
+        {% set s = states.sensor.tracer_charging_mode.state %}
+        {% if  s == 'unavailable' %}
+          {{ s }} 
+        {% else %}
+          {% if s|int == 0 %}
+            Lader ikke
+          {% elif s|int == 1 %}
+            Float
+          {% elif s|int == 2 %}
+            Boost
+          {% elif s|int == 3 %}
+            Equlization
+          {% else %}
+            ukjent
+          {% endif %}
+        {% endif %}  
+
+    tracer_battery_status_text:
+      friendly_name: Tracer carging mode text
+      value_template: >
+        {% set s = states.sensor.tracer_battery_status.state %}
+        {% if  s == 'unavailable' %}
+          {{ s }} 
+        {% else %}
+          {% if s|int == 0 %}
+            Normal
+          {% elif s|int == 1 %}
+            Høy spenning
+          {% elif s|int == 2 %}
+            Lav spenning
+          {% elif s|int == 3 %}
+            Kurs slått av
+          {% elif s|int == 4 %}
+            Feil
+          {% else %}
+            ukjent
+          {% endif %}
+        {% endif %}  
+
+    tracer_outside_sea_level_pressure_formatted:
+      friendly_name: Tracer sea level pressure formatted
+      unit_of_measurement: "hPa"
+      value_template: >
+        {{ '{0:.0f}'.format(states('sensor.tracer_outside_sea_level_pressure')|float) }}
+      icon_template: mdi:gauge
+
+    tracer_battery_current_total:
+      friendly_name: Tracer battery current total
+      unit_of_measurement: "A"
+      value_template: >
+        {{ '{0:.2f}'.format(states('sensor.tracer_battery_current')|float - states('sensor.tracer_own_current')|float) }}
+      icon_template: mdi:current-dc
+
+    tracer_battery_power_total:
+      friendly_name: Tracer battery power total
+      unit_of_measurement: "W"
+      value_template: >
+        {{ '{0:.1f}'.format(states('sensor.tracer_charging_power')|float - states('sensor.tracer_own_power')|float - states('sensor.tracer_load_power')|float) }}
+      icon_template: mdi:power-plug

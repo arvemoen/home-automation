@@ -89,9 +89,8 @@
 
 # Get Netatmo ute temperature change rate
 - platform: derivative
-  source: ssensor.netatmo_ws1_stue_ute_temperature
+  source: sensor.netatmo_ws1_stue_ute_temperature
   name: Netatmo ute temp change per hour
   round: 1
-  unit_time: h  # the resulting "unit_of_measurement" will be °C/h if the sensor.temperate has set °C as it's unit
-  time_window: "00:30:00"  # we look at the change over the last half hour
-
+  unit_time: h 
+  time_window: "01:00:00"

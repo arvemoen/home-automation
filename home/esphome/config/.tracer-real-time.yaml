@@ -1,0 +1,174 @@
+sensor:
+  - platform: modbus_controller
+    modbus_controller_id: epever
+    id: pv_voltage
+    name: ${prefix} PV voltage
+    address: 0x3100
+    unit_of_measurement: "V"
+    device_class: voltage
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: epever
+    id: pv_current
+    name: ${prefix} PV current
+    address: 0x3101
+    unit_of_measurement: "A"
+    device_class: current
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: epever
+    id: pv_power
+    name: ${prefix} PV power
+    address: 0x3102
+    unit_of_measurement: "W"
+    device_class: power
+    register_type: read
+    value_type: U_DWORD_R
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: epever
+    id: charging_voltage
+    name: ${prefix} charging voltage
+    address: 0x3104
+    unit_of_measurement: "V"
+    device_class: voltage
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: epever
+    id: charging_current
+    name: ${prefix} charging current
+    address: 0x3105
+    unit_of_measurement: "A"
+    device_class: current
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: epever
+    id: charging_power
+    name: ${prefix} charging power
+    address: 0x3106
+    unit_of_measurement: "W"
+    device_class: power
+    register_type: read
+    value_type: U_DWORD_R
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: epever
+    id: load_voltage
+    name: ${prefix} load voltage
+    address: 0x310C
+    unit_of_measurement: "V"
+    device_class: voltage
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: epever
+    id: load_current
+    name: ${prefix} load Current
+    address: 0x310D
+    unit_of_measurement: "A"
+    device_class: current
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: epever
+    id: load_power
+    name: ${prefix} load power
+    address: 0x310E
+    unit_of_measurement: "W"
+    device_class: power
+    register_type: read
+    value_type: U_DWORD_R
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: epever
+    id: battery_temperature
+    name: ${prefix} battery temperature
+    address: 0x3110
+    unit_of_measurement: °C
+    device_class: temperature
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: epever
+    id: device_temperature
+    name: ${prefix} device temperature
+    address: 0x3111
+    unit_of_measurement: °C
+    device_class: temperature
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: epever
+    id: battery_soc
+    name: ${prefix} battery SOC # State Of Charge
+    address: 0x311A
+    unit_of_measurement: "%"
+    device_class: battery
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 0
+
+  - platform: modbus_controller
+    modbus_controller_id: epever
+    id: battery_status
+    name: ${prefix} battery status
+    address: 0x3200
+    register_type: read
+    value_type: U_WORD
+    bitmask: 7  #(Bits 0-3)
+    accuracy_decimals: 0
+
+  - platform: modbus_controller
+    modbus_controller_id: epever
+    id: charging_mode
+    name: ${prefix} charging mode
+    address: 0x3201
+    register_type: read
+    value_type: U_WORD
+    bitmask: 0x6  #(Bits 3-2)
+    accuracy_decimals: 0

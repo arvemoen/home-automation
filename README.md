@@ -1,5 +1,5 @@
 # Home Automation
-Home automation repository for container based Home Assistant and Mosquitto
+Home automation repository for container based Home Assistant, Mosquitto (mqtt) and ESPHome
 
 ## My home automation landscape
 ![](img/SmartHome.bmp)

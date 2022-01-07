@@ -16,6 +16,6 @@
 "lock.*las":  
   device_class: lock
   state-color: true  
-"*battery*":
+"*_battery":
   device_class: battery
   state-color: true

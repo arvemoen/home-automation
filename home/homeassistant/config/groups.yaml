@@ -24,4 +24,4 @@ exterior_doors:
   entities:
     - binary_sensor.balkongdor
     - binary_sensor.sokkeldor
-    - binary_sensor.inngangsdor    
+    - binary_sensor.inngangsdor  

@@ -1,0 +1,10 @@
+- platform: sensibo
+  api_key: !secret sensibo_api_key
+
+- platform: generic_thermostat
+  unique_id: !secret uuid_generic_thermostat_spisestue
+  name: Spisestue
+  heater: switch.spisestue_turned_on
+  target_sensor: sensor.spisestue_temperature
+  target_temp: 23
+  precision: 1

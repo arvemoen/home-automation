@@ -1,0 +1,239 @@
+# Setup esphome device
+esphome:
+  name: tracer
+  platform: ESP8266
+  board: d1_mini
+  on_boot:
+    ## set controller settings at boot
+    ## make sure priority is lower than setup_priority of modbus_controller
+    priority: -100
+    then:
+      - lambda: |-
+          // get local time and sync to controller
+          auto time  = id(sntp_time).now();
+          int seconds = time.second;
+          int minutes = time.minute;
+          int hour    = time.hour;
+          int day     = time.day_of_month;
+          int month   = time.month;
+          int year    = time.year;
+          esphome::modbus_controller::ModbusController *controller = id(epever);
+          if (time.is_valid()) {
+            // create the payload
+            std::vector<uint16_t> rtc_data = {uint16_t((minutes << 8) | seconds), uint16_t((day << 8) | hour),
+                                              uint16_t((year << 8) | month)};
+            // Create a modbus command item with the time information as the payload
+            esphome::modbus_controller::ModbusCommandItem set_rtc_command =
+                esphome::modbus_controller::ModbusCommandItem::create_write_multiple_command(controller, 0x9013, 3, rtc_data);
+            // Submit the command to the send queue
+            epever->queue_command(set_rtc_command);
+            ESP_LOGI("ModbusLambda", "EPSOLAR RTC set to %02d:%02d:%02d %02d.%02d.%04d", hour, minutes, seconds, day, month, year);
+          } else {
+            ESP_LOGI("ModbusLambda", "EPSOLAR RTC not set - Time is not valid");
+          };
+
+          // Settings for LiFePO4 4-cell 225Ah battery
+          // Bettery specs: https://www.sparelys.no/media/content/pdf/Haichen/HC-12V225Ah-%20heating_BT.pdf
+          std::vector<uint16_t> battery_settings1 = {
+              0,       // 9000 Battery Type 0 = User
+              0x00E1,  // 9001 Battery Cap 0xE1 == 225AH //
+              0x0000,  // 9002 Temp compensation 0V /°C/2V //
+              0x05DC,  // 9003 0x5DC == 1500 Over Voltage Disconnect Voltage 15,0 //
+              0x05C8,  // 9004 0x58C == 1480 Charging Limit Voltage 14,8 //
+              0x05C8,  // 9005 Over Voltage Reconnect Voltage 14,8 //
+              0x05BF,  // 9006 Equalize Charging Voltage 14,6 //
+              0x05B4,  // 9007 Boost Charging Voltage 14,6 //
+              0x0564,  // 9008 Float Charging Voltage 13,8 //
+              0x0528,  // 9009 Boost Reconnect Charging Voltage 13,2 //
+              0x04C4,  // 900A Low Voltage Reconnect Voltage 12,2
+              0x04B0,  // 900B Under Voltage Warning Reconnect Voltage 12,0
+              0x04BA,  // 900c Under Volt. Warning Volt 12,1
+              0x04BA,  // 900d Low Volt. Disconnect Volt. 11.8
+              0x04BA   // 900E Discharging Limit Voltage 11.8
+          };
+          // Boost and equalization periods
+          std::vector<uint16_t> battery_settings2 = {
+              0x0000,  // 906B Equalize Duration (min.) 0
+              0x0075   // 906C Boost Duration (aka absorb) 117 mins
+          };
+          esphome::modbus_controller::ModbusCommandItem set_battery1_command =
+              esphome::modbus_controller::ModbusCommandItem::create_write_multiple_command(controller, 0x9000, battery_settings1.size(), battery_settings1);
+          esphome::modbus_controller::ModbusCommandItem set_battery2_command =
+              esphome::modbus_controller::ModbusCommandItem::create_write_multiple_command(controller, 0x906B, battery_settings2.size(), battery_settings2);
+          delay(200);
+          controller->queue_command(set_battery1_command);
+          delay(200);
+          controller->queue_command(set_battery2_command);
+          ESP_LOGI("ModbusLambda", "EPSOLAR Battery set");
+
+# initialize substitutions (constants)
+substitutions:
+  updates: 10min  # Update interval
+  prefix: Tracer  # Prefix for sensor names
+  altitude: '552' # Device location in metres above sea level. Used to calculate pressure at sea level.
+
+# Setup time
+time:
+  - platform: sntp
+    timezone: Europe/Oslo
+    id: sntp_time
+    
+# Setup WiFi
+wifi:
+  reboot_timeout: 10min
+  networks:
+    - ssid: !secret wifi_ssid_hytta
+      password: !secret wifi_password_hytta
+      hidden: true
+    - ssid: !secret wifi_ssid_home
+      password: !secret wifi_password_home
+
+# Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Tracer Fallback Hotspot"
+    password: !secret ota_password
+
+captive_portal:
+
+# Enable logging 
+logger:
+  baud_rate: 0   # Set to 0 avoid conflict with UART0
+  level: INFO
+
+# Enable OTA
+ota:
+  password: !secret ota_password
+  
+# Enable web server
+web_server:
+  port: 80
+
+# Setup mqtt
+mqtt:
+  broker: !secret mqtt_broker_external
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  discovery_prefix: !secret mqtt_discovery_prefix
+  discovery_retain: true
+  discovery: true
+
+# Setup i2c bus
+i2c:
+  id: i2c_bus
+  scl: SCL
+  sda: SDA
+  scan: False
+  
+# Setup UART for tracer RS485
+uart:
+  id: mod_bus
+  tx_pin: TX
+  rx_pin: RX
+  baud_rate: 115200
+  stop_bits: 1
+
+# Setup modbus
+modbus:
+  send_wait_time: 250ms
+  id: mod_bus_epever
+
+# Setup modbus controller
+modbus_controller:
+  - id: epever
+    address: 0x1
+    modbus_id: mod_bus_epever
+    command_throttle: 250ms
+    setup_priority: -10
+    update_interval: ${updates}
+    
+# Include packages
+packages:
+  tracer-real-time: !include .tracer-real-time.yaml
+  tracer-stats: !include .tracer-stats.yaml
+  tracer-settings: !include .tracer-settings.yaml
+  
+sensor:
+  
+  # BME280 temperature+pressure+humidity sensor (i2c)
+  - platform: bme280
+    address: 0x76
+    id: bme280_sensor
+    update_interval: ${updates}
+    temperature:
+      name: ${prefix} outside temperature
+      id: outside_temperature
+      accuracy_decimals: 1
+    pressure:
+      name: ${prefix} outside local pressure
+      id: outside_local_pressure
+      accuracy_decimals: 1
+    humidity:
+      name: ${prefix} outside humidity
+      id: outside_humidity
+      accuracy_decimals: 1
+      
+  # INA219 DC current sensor (i2c)
+  - platform: ina219
+    address: 0x40
+    id: ina219_sensor
+    update_interval: ${updates}
+    shunt_resistance: 0.1 ohm
+    max_voltage: 26.0V
+    max_current: 3.2A
+    current:
+      name: ${prefix} own current
+      accuracy_decimals: 2
+    power:
+      name: ${prefix} own power
+      accuracy_decimals: 1
+    bus_voltage:
+      name: ${prefix} own voltage
+      accuracy_decimals: 1
+  
+  # Calculated pessure at sea level
+  - platform: template
+    name: ${prefix} outside sea level pressure
+    id: outside_sea_level_pressure
+    device_class: pressure
+    lambda: |-
+      const float STANDARD_ALTITUDE = ${altitude}; // in meters above sea level
+      return id(outside_local_pressure).state / powf(1 - ((0.0065 * STANDARD_ALTITUDE) /
+        (id(outside_temperature).state + (0.0065 * STANDARD_ALTITUDE) + 273.15)), 5.257); // in hPa
+    update_interval: ${updates}
+    unit_of_measurement: hPa
+    accuracy_decimals: 1
+    
+  # Wifi signal sensor
+  - platform: wifi_signal
+    name: ${prefix} WiFi Signal
+    id: wifi_signal_sensor
+    update_interval: ${updates}
+    
+  # Uptime sensor
+  - platform: uptime
+    name: ${prefix} uptime 
+    id: uptime_sensor
+    update_interval: ${updates}
+
+switch:
+  
+  # Swith to turn on/off load
+  - platform: modbus_controller
+    modbus_controller_id: epever
+    name: ${prefix} load on/off
+    id: load_onoff
+    register_type: coil
+    address: 2
+    bitmask: 1
+  
+  # Switch to refresh sensor readings
+  - platform: template
+    name: ${prefix} refresh
+    id: refresh_data
+    turn_on_action: 
+      - component.update: epever
+      - component.update: bme280_sensor
+      - component.update: ina219_sensor
+      - component.update: uptime_sensor
+      - component.update: wifi_signal_sensor
+      - component.update: outside_sea_level_pressure

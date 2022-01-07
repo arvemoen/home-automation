@@ -55,6 +55,29 @@
       title: Temperatur i fryser er OK
       message: "Temperaturen er nå {{ states('sensor.fryser_temperature') }} ºC"      
 
+# Jacuzzi low temperatue
+- alias: "Jacuzzi temperature too low"
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.jacuzzi_temperature
+    below: 32
+  action:
+    service: notify.mobile_app_arve_sin_iphone
+    data_template:
+      title: Temperatur i jacuzzi er lav 
+      message: "Temperaturen er nå {{ states('sensor.jacuzzi_temperature') }} ºC"
+# Jacuzzi temperature back to normal"
+- alias: "Jacuzzi temperature OK"
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.jacuzzi_temperature
+    above: 32
+  action:
+    service: notify.mobile_app_arve_sin_iphone
+    data_template:
+      title: Temperatur i jacuzzi er OK
+      message: "Temperaturen er nå {{ states('sensor.jacuzzi_temperature') }} ºC"      
+
 # Toolshed low temperatue
 - alias: "Toolshed temperature too low"
   trigger:

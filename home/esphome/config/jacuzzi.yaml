@@ -3,18 +3,20 @@ esphome:
   platform: ESP8266
   board: esp01_1m
 
+# Setup time
 time:
   - platform: sntp
     timezone: Europe/Oslo
 
+# Setup WiFi
 wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
+  ssid: !secret wifi_ssid_home
+  password: !secret wifi_password_home
   fast_connect: true
   reboot_timeout: 10s
   manual_ip:
-    static_ip: !secret jacuzzi_ip
-    gateway: !secret gateway
+    static_ip: !secret jacuzzi_ip_home
+    gateway: !secret gateway_home
     subnet: !secret subnet  
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
@@ -27,7 +29,7 @@ captive_portal:
 # Enable logging
 logger:
 
-# Home Assistant API (Does not work well with deep_sleep. Using mqtt instead))
+# Home Assistant API (Does not work well with deep_sleep. Using mqtt instead
 # api:
 #   password: !secret ota_password
 
@@ -40,8 +42,10 @@ dallas:
   - pin: 2
     update_interval: 10s
 
-# Dallas DS18B20 Temperature sensor
+
 sensor:
+
+  # Dallas DS18B20 Temperature sensor
   - platform: dallas
     address: 0x7B0317248E50FF28
     name: "Jacuzzi Temperature"
@@ -49,18 +53,26 @@ sensor:
     filters:
     - max:
 
+  # Wifi signal sensor
+  - platform: wifi_signal
+    name: WiFi Signal
+    update_interval: 10s    
+
 # Enable deep sleep
 deep_sleep:
   run_duration: 10s
-  sleep_duration: 15min
+  sleep_duration: 20min
   id: deep_sleep_1
   
 # Setup mqtt
 mqtt:
-  broker: !secret mqtt_broker
+  broker: !secret mqtt_broker_internal
+  username: !secret mqtt_username
+  password: !secret mqtt_password
   discovery: true
   discovery_retain: true
   discovery_prefix: !secret mqtt_discovery_prefix
+  # Use empty birth/will messages with deep sleep to avoid sensor "unknown" status in homeass
   birth_message:
   will_message:
   on_message:
