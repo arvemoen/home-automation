@@ -31,66 +31,60 @@
   file_path: /config/file_dump/speedtest.json
   value_template: "{{ value_json['server']['location'] }}"
 
-  # Get real speedtest statistics
+# Get real speedtest min and max values from statistics
 
 - platform: statistics
-  name: real_speedtest_ping_stats
+  name: real_speedtest_ping_min
   entity_id: sensor.real_speedtest_pings
+  state_characteristic: value_min
   precision: 2 
   sampling_size: 48
   max_age:
     hours: 24
 
 - platform: statistics
-  name: real_speedtest_download_stats
+  name: real_speedtest_ping_max
+  entity_id: sensor.real_speedtest_pings
+  state_characteristic: value_max
+  precision: 2 
+  sampling_size: 48
+  max_age:
+    hours: 24
+
+
+- platform: statistics
+  name: real_speedtest_download_min
   entity_id: sensor.real_speedtest_download
+  state_characteristic: value_min
   precision: 0 
   sampling_size: 48
   max_age:
     hours: 24
 
 - platform: statistics
-  name: real_speedtest_upload_stats
-  entity_id: sensor.real_speedtest_upload
+  name: real_speedtest_download_max
+  entity_id: sensor.real_speedtest_download
+  state_characteristic: value_max
   precision: 0 
   sampling_size: 48
   max_age:
     hours: 24
 
-# Get real speedtest min and max values from statistics
 
-- platform: template
-  sensors:
-    
-    real_speedtest_ping_min:
-      friendly_name: Ping min
-      value_template: "{{ state_attr('sensor.real_speedtest_ping_stats', 'min_value') }}"
-      icon_template: mdi:format-vertical-align-bottom
-      unit_of_measurement: 'ms' 
-    real_speedtest_ping_max:
-      friendly_name: Ping max
-      value_template: "{{ state_attr('sensor.real_speedtest_ping_stats', 'max_value') }}"
-      icon_template: mdi:format-vertical-align-top
-      unit_of_measurement: 'ms'
+- platform: statistics
+  name: real_speedtest_upload_min
+  entity_id: sensor.real_speedtest_upload
+  state_characteristic: value_min
+  precision: 0 
+  sampling_size: 48
+  max_age:
+    hours: 24
 
-    real_speedtest_download_min:
-      friendly_name: Download min
-      value_template: "{{ state_attr('sensor.real_speedtest_download_stats', 'min_value') }}"
-      icon_template: mdi:format-vertical-align-bottom
-      unit_of_measurement: 'Mbps'  
-    real_speedtest_download_max:
-      friendly_name: Download max
-      value_template: "{{ state_attr('sensor.real_speedtest_download_stats', 'max_value') }}"
-      icon_template: mdi:format-vertical-align-top
-      unit_of_measurement: 'Mbps'
-    
-    real_speedtest_upload_min:
-      friendly_name: Upload min
-      value_template: "{{ state_attr('sensor.real_speedtest_upload_stats', 'min_value') }}"
-      icon_template: mdi:format-vertical-align-bottom
-      unit_of_measurement: 'Mbps'  
-    real_speedtest_upload_max:
-      friendly_name: Upload max
-      value_template: "{{ state_attr('sensor.real_speedtest_upload_stats', 'max_value') }}"
-      icon_template: mdi:format-vertical-align-top
-      unit_of_measurement: 'Mbps'
+- platform: statistics
+  name: real_speedtest_upload_max
+  entity_id: sensor.real_speedtest_upload
+  state_characteristic: value_max
+  precision: 0 
+  sampling_size: 48
+  max_age:
+    hours: 24
