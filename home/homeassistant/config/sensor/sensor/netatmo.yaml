@@ -1,34 +1,55 @@
-# Get stue temperature statisics
+# Get stue tempersture min and max values from statistics
 - platform: statistics
-  name: netatmo_ws1_stue_temperature_stats
+  name: netatmo_ws1_stue_temperature_min
   entity_id: sensor.netatmo_ws1_stue_temperature
+  state_characteristic: value_min
   precision: 1 
   sampling_size: 120
   max_age:
     hours: 24
 
-# Get ute temperature statisics
 - platform: statistics
-  name: netatmo_ws1_stue_ute_temperature_stats
+  name: netatmo_ws1_stue_temperature_max
+  entity_id: sensor.netatmo_ws1_stue_temperature
+  state_characteristic: value_max
+  precision: 1 
+  sampling_size: 120
+  max_age:
+    hours: 24    
+
+# Get ute tempersture min and max values from statistics
+- platform: statistics
+  name: netatmo_ws1_stue_ute_temperature_min
   entity_id: sensor.netatmo_ws1_stue_ute_temperature
+  state_characteristic: value_min
   precision: 1 
   sampling_size: 120
   max_age:
     hours: 24
 
-# Get sov1 temperature statisics
 - platform: statistics
-  name: netatmo_ws1_stue_sov1_temperature_stats
-  entity_id: sensor.netatmo_ws1_stue_sov1_temperature
+  name: netatmo_ws1_stue_ute_temperature_max
+  entity_id: sensor.netatmo_ws1_stue_ute_temperature
+  state_characteristic: value_max
   precision: 1 
   sampling_size: 120
   max_age:
-    hours: 24   
+    hours: 24    
 
-# Get kontor temperature statisics
+# Get kontor tempersture min and max values from statistics
 - platform: statistics
-  name: netatmo_ws1_stue_kontor_temperature_stats
+  name: netatmo_ws1_stue_kontor_temperature_min
   entity_id: sensor.netatmo_ws1_stue_kontor_temperature
+  state_characteristic: value_min
+  precision: 1 
+  sampling_size: 120
+  max_age:
+    hours: 24
+
+- platform: statistics
+  name: netatmo_ws1_stue_kontor_temperature_max
+  entity_id: sensor.netatmo_ws1_stue_kontor_temperature
+  state_characteristic: value_max
   precision: 1 
   sampling_size: 120
   max_age:
@@ -36,50 +57,6 @@
 
 - platform: template
   sensors:
-    # Get stue tempersture min and max values from statistics
-    netatmo_ws1_stue_temperature_min:
-      friendly_name: Temp stue min
-      value_template: "{{ state_attr('sensor.netatmo_ws1_stue_temperature_stats', 'min_value')|round(1) }}"
-      icon_template: mdi:format-vertical-align-bottom
-      unit_of_measurement: "ºC" 
-    netatmo_ws1_stue_temperature_max:
-      friendly_name: Temp stue max
-      value_template: "{{ state_attr('sensor.netatmo_ws1_stue_temperature_stats', 'max_value')|round(1) }}"
-      icon_template: mdi:format-vertical-align-top
-      unit_of_measurement: "ºC"      
-    # Get sov1 tempersture min and max values from statistics
-    netatmo_ws1_stue_sov1_temperature_min:
-      friendly_name: Temp sov1 min
-      value_template: "{{ state_attr('sensor.netatmo_ws1_stue_sov1_temperature_stats', 'min_value')|round(1) }}"
-      icon_template: mdi:format-vertical-align-bottom
-      unit_of_measurement: "ºC" 
-    netatmo_ws1_stue_sov1_temperature_max:
-      friendly_name: Temp sov1 max
-      value_template: "{{ state_attr('sensor.netatmo_ws1_stue_sov1_temperature_stats', 'max_value')|round(1) }}"
-      icon_template: mdi:format-vertical-align-top
-      unit_of_measurement: "ºC"      
-    # Get ute tempersture min and max values from statistics
-    netatmo_ws1_stue_ute_temperature_min:
-      friendly_name: Temp ute min
-      value_template: "{{ state_attr('sensor.netatmo_ws1_stue_ute_temperature_stats', 'min_value')|round(1) }}"
-      icon_template: mdi:format-vertical-align-bottom
-      unit_of_measurement: "ºC" 
-    netatmo_ws1_stue_ute_temperature_max:
-      friendly_name: Temp ute max
-      value_template: "{{ state_attr('sensor.netatmo_ws1_stue_ute_temperature_stats', 'max_value')|round(1) }}"
-      icon_template: mdi:format-vertical-align-top
-      unit_of_measurement: "ºC"      
-    # Get kontor tempersture min and max values from statistics
-    netatmo_ws1_stue_kontor_temperature_min:
-      friendly_name: Temp kontor min
-      value_template: "{{ state_attr('sensor.netatmo_ws1_stue_kontor_temperature_stats', 'min_value')|round(1) }}"
-      icon_template: mdi:format-vertical-align-bottom
-      unit_of_measurement: "ºC" 
-    netatmo_ws1_stue_kontor_temperature_max:
-      friendly_name: Temp kontor max
-      value_template: "{{ state_attr('sensor.netatmo_ws1_stue_kontor_temperature_stats', 'max_value')|round(1) }}"
-      icon_template: mdi:format-vertical-align-top
-      unit_of_measurement: "ºC"      
     # Get formatted pressure
     netatmo_ws1_stue_pressure_f:
       friendly_name: "Trykk"
