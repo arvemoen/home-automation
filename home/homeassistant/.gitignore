@@ -13,8 +13,6 @@ home-assistant_v2*.db*
 lib
 deps
 tts
-www
-custom_components
 secrets.yaml
 known_devices.yaml
 google_calendars.yaml

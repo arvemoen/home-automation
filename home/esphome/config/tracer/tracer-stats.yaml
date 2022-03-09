@@ -2,78 +2,84 @@ sensor:
   - platform: modbus_controller
     modbus_controller_id: epever
     id: pv_max_voltage_today
-    name: ${prefix} PV maximum voltage today
+    name: ${friendly_name} PV maximum voltage today
     address: 0x3300
     register_type: read
     value_type: U_WORD
-    accuracy_decimals: 1
     unit_of_measurement: "V"
     device_class: voltage
+    icon: mdi:alpha-v-circle-outline
+    accuracy_decimals: 2
     filters:
       - multiply: 0.01
 
   - platform: modbus_controller
     modbus_controller_id: epever
     id: pv_min_voltage_today
-    name: ${prefix} PV minimum voltage today
+    name: ${friendly_name} PV minimum voltage today
     address: 0x3301
     register_type: read
     value_type: U_WORD
-    accuracy_decimals: 1
     unit_of_measurement: "V"
     device_class: voltage
+    icon: mdi:alpha-v-circle-outline
+    accuracy_decimals: 2
     filters:
       - multiply: 0.01
 
   - platform: modbus_controller
     modbus_controller_id: epever
     id: battery_max_voltage_today
-    name: ${prefix} battery maximum voltage today
+    name: ${friendly_name} battery maximum voltage today
     address: 0x3302
     register_type: read
     value_type: U_WORD
-    accuracy_decimals: 1
     unit_of_measurement: "V"
     device_class: voltage
+    icon: mdi:alpha-v-circle-outline
+    accuracy_decimals: 2
     filters:
       - multiply: 0.01
 
   - platform: modbus_controller
     modbus_controller_id: epever
     id: battery_min_voltage_today
-    name: ${prefix} battery minimum voltage today
+    name: ${friendly_name} battery minimum voltage today
     address: 0x3303
     register_type: read
     value_type: U_WORD
-    accuracy_decimals: 1
     unit_of_measurement: "V"
     device_class: voltage
+    icon: mdi:alpha-v-circle-outline
+    accuracy_decimals: 2
     filters:
       - multiply: 0.01
 
   - platform: modbus_controller
     modbus_controller_id: epever
     id: battery_voltage
-    name: ${prefix} battery voltage
+    name: ${friendly_name} battery voltage
     address: 0x331A
     register_type: read
     value_type: U_WORD
-    accuracy_decimals: 1
     unit_of_measurement: "V"
     device_class: voltage
+    icon: mdi:alpha-v-circle-outline
+    accuracy_decimals: 2
     filters:
       - multiply: 0.01
 
   - platform: modbus_controller
     modbus_controller_id: epever
     id: battery_current
-    name: ${prefix} battery current
+    name: ${friendly_name} battery current
     address: 0x331B
     register_type: read
     value_type: S_DWORD_R
     register_count: 2
-    accuracy_decimals: 2
     unit_of_measurement: "A"
     device_class: current
+    icon: mdi:current-dc
+    accuracy_decimals: 2
     filters:
       - multiply: 0.01

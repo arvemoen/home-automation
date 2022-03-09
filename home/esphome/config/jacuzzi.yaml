@@ -1,5 +1,16 @@
+# initialize substitutions (constants)
+substitutions:
+  device_name: jacuzzi
+  friendly_name: Jacuzzi  # Prefix for sensor names
+  updates: 10s            # Update interval
+  run_duration: 10s       # Run duration
+  sleep_duration: 20min   # Deep sleep duration
+  max_batt_volt: '3.2'    # Full (new 2*AA alkaline) battery voltage
+  min_batt_volt: '2.4'    # Empty battery voltage (too low to run device)
+
+# Setup esphome device
 esphome:
-  name: jacuzzi
+  name: ${device_name}
   platform: ESP8266
   board: esp01_1m
 
@@ -13,23 +24,24 @@ wifi:
   ssid: !secret wifi_ssid_home
   password: !secret wifi_password_home
   fast_connect: true
-  reboot_timeout: 10s
+  reboot_timeout: ${updates}
   manual_ip:
-    static_ip: !secret jacuzzi_ip_home
-    gateway: !secret gateway_home
+    static_ip: !secret jacuzzi_ip
+    gateway: !secret gateway
     subnet: !secret subnet  
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
-    ssid: "Jacuzzi Fallback Hotspot"
-    password: "DpTaMuhtEvdK"
+    ssid: ${friendly_name} Fallback Hotspot
+    password: !secret ota_password
 
 captive_portal:
 
 # Enable logging
 logger:
+  level: INFO
 
-# Home Assistant API (Does not work well with deep_sleep. Using mqtt instead
+# Home Assistant API (Does not work well with deep_sleep. Using mqtt instead)
 # api:
 #   password: !secret ota_password
 
@@ -39,29 +51,55 @@ ota:
   
 # Dallas 1-wire
 dallas:
-  - pin: 2
-    update_interval: 10s
-
+  - pin: GPIO0
+    update_interval: ${updates}
 
 sensor:
 
   # Dallas DS18B20 Temperature sensor
   - platform: dallas
     address: 0x7B0317248E50FF28
-    name: "Jacuzzi Temperature"
+    name: ${friendly_name} temperature
+    device_class: temperature
     retain: true
+    # Get one sensor reading
     filters:
-    - max:
+      - min:
 
   # Wifi signal sensor
   - platform: wifi_signal
-    name: WiFi Signal
-    update_interval: 10s    
-
+    name: ${friendly_name} WiFi Signal
+    device_class: signal_strength
+    update_interval: ${updates} 
+    # Get one sensor reading
+    filters:
+      - min:
+    
+  # Device VCC voltage sensor (internal)
+  - platform: adc
+    name: ${friendly_name} VCC voltage
+    pin: VCC
+    id: vcc_voltage
+    update_interval: ${updates} 
+    filters:
+      - min:
+    
+  # Battery level sensor
+  - platform: template
+    name: ${friendly_name} battery level
+    unit_of_measurement: '%'
+    update_interval: ${updates}
+    device_class: battery
+    accuracy_decimals: 0
+    lambda: |-
+      return ((id(vcc_voltage).state - ${min_batt_volt}) / (${max_batt_volt} - ${min_batt_volt}) * 100);  
+    filters:
+      - min:
+  
 # Enable deep sleep
 deep_sleep:
-  run_duration: 10s
-  sleep_duration: 20min
+  run_duration: ${run_duration}
+  sleep_duration: ${sleep_duration}
   id: deep_sleep_1
   
 # Setup mqtt
@@ -76,11 +114,13 @@ mqtt:
   birth_message:
   will_message:
   on_message:
-    - topic: jacuzzi/ota_mode
+    # Use to turn on OTA mode
+    - topic: ${device_name}/ota_mode
       payload: 'ON'
       then:
         - deep_sleep.prevent: deep_sleep_1
-    - topic: jacuzzi/sleep_mode
+    # Use to turn on sleep mode
+    - topic: ${device_name}/sleep_mode
       payload: 'ON'
       then:
         - deep_sleep.enter: deep_sleep_1  

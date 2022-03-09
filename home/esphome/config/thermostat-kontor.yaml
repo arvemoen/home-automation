@@ -1,0 +1,187 @@
+# initialize substitutions (constants)
+substitutions:
+  device_name: thermostat-kontor 
+  friendly_name: Therm Kontor    # Prefix for sensor names  
+  oled_on_time: 10s              # Time to keep OLED on
+  target_temp_step: '1'          # Target temperature increase/decrease step size 
+
+# Setup esphome device
+esphome:
+  name: ${device_name}
+  platform: ESP8266
+  board: d1_mini
+  on_boot:
+    priority: -100
+    then:
+      - lambda: id(oled).turn_off();
+
+# Enable logging
+logger:
+  level: INFO
+
+# Enable Home Assistant API
+api:
+
+# Enable Over The Air
+ota:
+  password: !secret ota_password
+  
+# Setup time
+time:
+  - platform: homeassistant
+    id: esptime
+    
+# Setup WiFi
+wifi:
+  ssid: !secret wifi_ssid_home
+  password: !secret wifi_password_home
+  fast_connect: true
+  reboot_timeout: 10min
+  manual_ip:
+    static_ip: !secret therm_kontor_ip
+    gateway: !secret gateway
+    subnet: !secret subnet  
+
+# Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: ${friendly_name} Fallback Hotspot
+    password: !secret ota_password
+    
+captive_portal:
+
+# Enable web server
+web_server:
+  port: 80
+  include_internal: true
+  
+# Setup i2c bus
+i2c:
+  id: i2c_bus
+  scl: SCL
+  sda: SDA
+  scan: False
+
+# Setup fonts
+font:
+  - file: "fonts/ComicSansMS3.ttf"
+    id: font1
+    size: 16
+    
+  - file: "fonts/ComicSansMS3.ttf"
+    id: font2
+    size: 40
+
+  - file: "fonts/ComicSansMS3.ttf"
+    id: font3
+    size: 22    
+    
+# Config OLED Display SSD1306
+display:
+  - platform: ssd1306_i2c
+    model: "SSD1306 128x64"
+    address: 0x3C
+    id: oled
+    contrast: 10%
+    lambda: |-
+      // Print "Kontor" in top center.
+      it.printf(64, 0, id(font1), TextAlign::TOP_CENTER, "Kontor");
+
+      // Print set temperature (from homeassistant sensor)
+      if (id(target_temperature).has_state()) {
+        it.printf(0, 60, id(font2), TextAlign::BASELINE_LEFT , "%.0f°", id(target_temperature).state);
+      }
+
+      // Print temperature (from homeassistant sensor)
+      if (id(current_temperature).has_state()) {
+        it.printf(127, 60, id(font3), TextAlign::BASELINE_RIGHT , "%.1f°", id(current_temperature).state);
+      }  
+   
+# Set up sensors
+sensor:
+ 
+  # Get current temperature from Home Assistant
+  - platform: homeassistant
+    id: current_temperature
+    entity_id: climate.kontor
+    attribute: current_temperature
+    internal: true
+
+  # Get target temperature from Home Assistant
+  - platform: homeassistant
+    id: target_temperature
+    entity_id: climate.kontor
+    attribute: temperature
+    internal: true  
+    
+# Set up binary sensors
+binary_sensor:
+
+  - platform: gpio
+    pin:
+      number: D3
+      inverted: true
+      mode:
+        input: true
+        pullup: true # D8 has internal pull-up
+    filters:
+      - delayed_on: 1ms
+    name: ${friendly_name} Temp up
+    id: temp_up_switch
+    internal: true  
+    on_press:
+      - script.execute: target_temperatur_up
+      - script.execute: reset_oled_on_timer
+
+  - platform: gpio
+    pin:
+      number: D8
+      mode:
+        input: true
+        pullup: false # D8 has internal pull-down
+    filters:
+      - delayed_on: 1ms
+    name: ${friendly_name} Temp down
+    id: temp_down_switch
+    internal: true  
+    on_press:
+      - script.execute: target_temperatur_down
+      - script.execute: reset_oled_on_timer
+
+# Set up scripts
+script:
+
+  # Script to turn/keep OLED on and start/restart on-timer
+  - id: reset_oled_on_timer
+    mode: restart
+    then:
+      - lambda: id(oled).turn_on();
+      - delay: ${oled_on_time}
+      - lambda: id(oled).turn_off();
+
+  # Script to increase target temperatur
+  - id: target_temperatur_up
+    mode: single
+    then:
+      - if:
+          condition: 
+            lambda: return id(oled).is_on();
+          then:
+            - homeassistant.service:
+                service: climate.set_temperature
+                data_template:  
+                  entity_id: climate.kontor
+                  temperature: "{{ state_attr('climate.kontor', 'temperature') |int + ${target_temp_step} }}"
+
+  # Script to decrease target temperature
+  - id: target_temperatur_down
+    mode: single
+    then:
+      - if:
+          condition: 
+            lambda: return id(oled).is_on();
+          then:
+            - homeassistant.service:
+                service: climate.set_temperature
+                data_template:  
+                  entity_id: climate.kontor
+                  temperature: "{{ state_attr('climate.kontor', 'temperature') |int - ${target_temp_step} }}"

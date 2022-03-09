@@ -15,9 +15,9 @@ set SPEEDTEST_FOLDER=.
 set SPEEDTEST_FILENAME=speedtest
 set SPEEDTEST_FORMAT=json
 
-REM Run speedtest against Telia Norge AS (server id 31861). Save result on file
+REM Run speedtest against UNINETT (server id 25057). Save result on file
 REM See https://c.speedtest.net/speedtest-servers-static.php for more server IDs
-speedtest.exe --server-id=31861 --format=%SPEEDTEST_FORMAT% > %SPEEDTEST_FOLDER%\%SPEEDTEST_FILENAME%_real.%SPEEDTEST_FORMAT%
+speedtest.exe --server-id=25057 --format=%SPEEDTEST_FORMAT% > %SPEEDTEST_FOLDER%\%SPEEDTEST_FILENAME%_real.%SPEEDTEST_FORMAT%
 
 REM Remove ending CRLF in file
 for /F usebackq^ delims^=^ eol^= %%L in ("%SPEEDTEST_FOLDER%\%SPEEDTEST_FILENAME%_real.%SPEEDTEST_FORMAT%") do (

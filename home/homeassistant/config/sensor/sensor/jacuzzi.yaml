@@ -1,0 +1,27 @@
+# Get jacuzzi tempersture min and max values last 3 hrs from statistics
+- platform: statistics
+  name: jacuzzi_temperature_min
+  entity_id: sensor.jacuzzi_temperature
+  state_characteristic: value_min
+  precision: 1 
+  sampling_size: 10
+  max_age:
+    hours: 3
+
+- platform: statistics
+  name: jacuzzi_temperature_max
+  entity_id: sensor.jacuzzi_temperature
+  state_characteristic: value_max
+  precision: 1 
+  sampling_size: 10
+  max_age:
+    hours: 3   
+
+# Get Jacuzzi temperature change rate
+- platform: derivative
+  source: sensor.jacuzzi_temperature
+  name: Jacuzzi temperature change per hour
+  round: 1
+  unit_time: h 
+  time_window: "01:00:00"
+

@@ -1,0 +1,7 @@
+# Create template Tracer binary sensors
+- platform: template
+  sensors:
+    tracer_load_used:
+      friendly_name: Tracer load used
+      value_template: >
+        {{ states('sensor.tracer_load_power')|float > 4.0 }}

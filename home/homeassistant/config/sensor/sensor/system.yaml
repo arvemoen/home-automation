@@ -13,10 +13,6 @@
 - platform: uptime
   name: Time online
 
-- platform: version
-  name: Version available
-  source: docker    
-
 - platform: command_line
   name: Version current
   command: "hass --version"

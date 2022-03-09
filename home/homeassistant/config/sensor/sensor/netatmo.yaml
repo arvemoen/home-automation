@@ -1,4 +1,4 @@
-# Get stue tempersture min and max values from statistics
+# Get stue temperature min and max values from statistics
 - platform: statistics
   name: netatmo_ws1_stue_temperature_min
   entity_id: sensor.netatmo_ws1_stue_temperature
@@ -17,7 +17,7 @@
   max_age:
     hours: 24    
 
-# Get ute tempersture min and max values from statistics
+# Get ute temperature min and max values from statistics
 - platform: statistics
   name: netatmo_ws1_stue_ute_temperature_min
   entity_id: sensor.netatmo_ws1_stue_ute_temperature
@@ -36,7 +36,7 @@
   max_age:
     hours: 24    
 
-# Get kontor tempersture min and max values from statistics
+# Get kontor temperature min and max values from statistics
 - platform: statistics
   name: netatmo_ws1_stue_kontor_temperature_min
   entity_id: sensor.netatmo_ws1_stue_kontor_temperature

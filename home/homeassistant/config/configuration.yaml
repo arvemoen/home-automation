@@ -63,7 +63,7 @@ updater:
 # Allows you to issue voice commands from the frontend in enabled browsers
 # conversation:
 
-# Home assitant database storage
+# Homa assitant database storage
 recorder:
   purge_keep_days: 7  
 

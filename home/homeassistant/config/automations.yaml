@@ -1,0 +1,36 @@
+- id: '1641974086153'
+  alias: Low battery level detection & notification for all battery sensors
+  description: ''
+  use_blueprint:
+    path: homeassistant/notify_low_battery.yaml
+    input:
+      threshold: 15
+      actions:
+      - service: notify.mobile_app_arve_sin_iphone
+        data:
+          title: Batteri snart tomt
+          message: '{{ sensor }}'
+- id: '1641974531474'
+  alias: Low battery level detection & notification for all battery sensors
+  description: ''
+  use_blueprint:
+    path: homeassistant/notify_low_battery.yaml
+    input:
+      threshold: 15
+      actions:
+      - service: notify.mobile_app_arve_sin_iphone
+        data:
+          title: Batteri snart tomt
+          message: '{{sensors|replace("_"," ")}}'
+- id: '1641974753779'
+  alias: Low battery level
+  description: ''
+  use_blueprint:
+    path: homeassistant/notify_low_battery.yaml
+    input:
+      threshold: 15
+      actions:
+      - service: notify.mobile_app_arve_sin_iphone
+        data:
+          title: Batteri snart tomt
+          message: '{{sensors|replace("_"," ")}}'

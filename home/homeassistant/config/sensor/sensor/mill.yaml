@@ -64,31 +64,3 @@
       friendly_name: "Vifte"
       value_template: "{{ state_attr('climate.kjellerstue', 'fan_mode') }}"
       icon_template: hass:fan  
-
-    mill_kontor_current_temp:
-      friendly_name: "Temperatur"
-      value_template: "{{ state_attr('climate.kontor', 'current_temperature') }}"
-      icon_template: hass:thermometer
-      unit_of_measurement: "ºC"
-    mill_kontor_setpoint_temp:
-      friendly_name: "Mål-temperatur"
-      value_template: "{{ state_attr('climate.kontor', 'temperature') }}"
-      icon_template: hass:thermometer
-      unit_of_measurement: "ºC"
-    mill_kontor_avg_room_temp:
-      friendly_name: "Gjennomsnitt temperatur"
-      value_template: "{{ state_attr('climate.kontor', 'avg_room_temp') }}"
-      icon_template: hass:thermometer
-      unit_of_measurement: "ºC"
-    mill_kontor_hvac_action:
-      friendly_name: "Modus"
-      value_template: "{{ state_attr('climate.kontor', 'hvac_action') }}"
-      icon_template: hass:menu
-    mill_kontor_heating_ind:
-      friendly_name: "Varmeindikator"
-      value_template: "{{ state_attr('climate.kontor', 'heating') }}"
-      icon_template: hass:fire
-    mill_kontor_open_window:
-      friendly_name: "Åpent vindu"
-      value_template: "{{ state_attr('climate.kontor', 'open_window') }}"
-      icon_template: hass:window-open  
