@@ -1,0 +1,526 @@
+climate_package:
+  
+  # Config and create climate thermostates
+  climate:
+  
+    # Set-up Sensibo thermostat heat-pump IR-controller
+    - platform: sensibo
+      api_key: !secret sensibo_api_key
+
+    # Create generic thermostat for Spisestue
+    - platform: generic_thermostat
+      unique_id: !secret uuid_generic_thermostat_spisestue
+      name: Spisestue
+      heater: switch.spisestue_turned_on
+      target_sensor: sensor.spisestue_temperature
+      target_temp: 25
+      min_temp: 10
+      max_temp: 30 
+      precision: 1
+
+    # Create generic thermostat for Kontor
+    - platform: generic_thermostat
+      unique_id: !secret uuid_generic_thermostat_kontor
+      name: Kontor
+      heater: switch.kontor_turned_on
+      target_sensor: sensor.netatmo_kontor_temperature
+      target_temp: 23
+      min_temp: 10
+      max_temp: 30
+      precision: 1
+
+    # Create generic thermostat for Stue
+    - platform: generic_thermostat
+      unique_id: !secret uuid_generic_thermostat_stue
+      name: Stue
+      heater: switch.stue_turned_on
+      target_sensor: sensor.netatmo_stue_temperature
+      target_temp: 25
+      min_temp: 10
+      max_temp: 30
+      precision: 1
+
+  # Create climate groups
+  group:
+
+    climate_all:
+      entities:
+        - climate.stue
+        # - climate.gulvovn1
+        - climate.spisestue
+        # - climate.kjellerstue
+        - climate.gulvovn2
+        - climate.kontor
+        - climate.varmepumpe
+
+    climate_open_door_affected:
+      entities:
+        - climate.stue
+        # - climate.gulvovn1
+        - climate.spisestue
+        # - climate.kjellerstue
+        - climate.gulvovn2
+
+  
+  # Create input booleans
+  input_boolean: 
+
+    # Temp setback night switch (on/off set by user)
+    temp_setback_night_switch:
+      name: Temp setback night switch
+      icon: mdi:weather-night
+      initial: off
+
+    # Temp setback night state (state holder)  
+    temp_setback_night_state:
+      name: Temp setback night state
+      icon: mdi:weather-night
+      initial: off
+
+    # Temp setback door open switch (on/off set by user)
+    temp_setback_door_open_switch:
+      name: Temp setback door open switch
+      icon: mdi:door-open
+      initial: on
+
+    # Temp setback door open state (state holder)
+    temp_setback_door_open_state:  
+      name: Temp setback door open state
+      icon: mdi:door-open
+      initial: off
+
+  # Create input numbers     
+  input_number: 
+
+    # Slider to set night setback temperatur
+    slider_temp_setback_night:
+      name: Temperature night setback temp
+      initial: 3
+      min: 1
+      max: 5
+      step: 1
+      mode: slider
+      unit_of_measurement: "ºC"
+
+    # Slider to set door open setback temperatur
+    slider_temp_setback_door_open:
+      name: Temperature door open setback temp
+      initial: 8
+      min: 1
+      max: 10
+      step: 1
+      mode: slider
+      unit_of_measurement: "ºC"
+
+  # Create input datetimes  
+  input_datetime:
+
+    # Start of temp setback temperature period
+    temp_setback_night_start_time:
+      name: Temp setback night start time
+      has_date: false
+      has_time: true
+      initial: '23:00'
+
+    # End of temp setback temperature period
+    temp_setback_night_end_time:
+      name: Temp setback night end time
+      has_date: false
+      has_time: true 
+      initial: '05:30'
+
+  # Create Climate sensors
+  sensor:
+
+    # Mill template sensors
+    - platform: template
+      sensors:
+
+        # # Mill heater sensors for Stue
+        # mill_stue_current_temp:
+        #   friendly_name: "Temperatur"
+        #   value_template: "{{ state_attr('climate.stue', 'current_temperature') }}"
+        #   icon_template: hass:thermometer
+        #   unit_of_measurement: "ºC"
+        # mill_stue_setpoint_temp:
+        #   friendly_name: "Mål-temperatur"
+        #   value_template: "{{ state_attr('climate.stue', 'temperature') }}"
+        #   icon_template: hass:thermometer
+        #   unit_of_measurement: "ºC"
+        # mill_stue_avg_room_temp:
+        #   friendly_name: "Gjennomsnitt temperatur"
+        #   value_template: "{{ state_attr('climate.stue', 'avg_room_temp') }}"
+        #   icon_template: hass:thermometer
+        #   unit_of_measurement: "ºC"
+        # mill_stue_hvac_action:
+        #   friendly_name: "Modus"
+        #   value_template: "{{ state_attr('climate.stue', 'hvac_action') }}"
+        #   icon_template: hass:menu
+        # mill_stue_heating_ind:
+        #   friendly_name: "Varmeindikator"
+        #   value_template: "{{ state_attr('climate.stue', 'heating') }}"
+        #   icon_template: hass:fire
+        # mill_stue_open_window:
+        #   friendly_name: "Åpent vindu"
+        #   value_template: "{{ state_attr('climate.stue', 'open_window') }}"
+        #   icon_template: hass:window-open  
+        # mill_stue_fan_mode:
+        #   friendly_name: "Vifte"
+        #   value_template: "{{ state_attr('climate.stue', 'fan_mode') }}"
+        #   icon_template: hass:fan  
+        
+        # Mill heater sensors for Kjellerstue
+        mill_kjellerstue_current_temp:
+          friendly_name: "Temperatur"
+          value_template: "{{ state_attr('climate.kjellerstue', 'current_temperature') }}"
+          icon_template: hass:thermometer
+          unit_of_measurement: "ºC"
+        mill_kjellerstue_setpoint_temp:
+          friendly_name: "Mål-temperatur"
+          value_template: "{{ state_attr('climate.kjellerstue', 'temperature') }}"
+          icon_template: hass:thermometer
+          unit_of_measurement: "ºC"
+        mill_kjellerstue_avg_room_temp:
+          friendly_name: "Gjennomsnitt temperatur"
+          value_template: "{{ state_attr('climate.kjellerstue', 'avg_room_temp') }}"
+          icon_template: hass:thermometer
+          unit_of_measurement: "ºC"
+        mill_kjellerstue_hvac_action:
+          friendly_name: "Modus"
+          value_template: "{{ state_attr('climate.kjellerstue', 'hvac_action') }}"
+          icon_template: hass:menu
+        mill_kjellerstue_heating_ind:
+          friendly_name: "Varmeindikator"
+          value_template: "{{ state_attr('climate.kjellerstue', 'heating') }}"
+          icon_template: hass:fire
+        mill_kjellerstue_open_window:
+          friendly_name: "Åpent vindu"
+          value_template: "{{ state_attr('climate.kjellerstue', 'open_window') }}"
+          icon_template: hass:window-open  
+        mill_kjellerstue_fan_mode:
+          friendly_name: "Vifte"
+          value_template: "{{ state_attr('climate.kjellerstue', 'fan_mode') }}"
+          icon_template: hass:fan  
+
+    # Sensibo template sensors
+    - platform: template
+      sensors:
+        sensibo_current_room_temp:
+          friendly_name: "Temperatur"
+          value_template: "{{ state_attr('climate.varmepumpe', 'current_temperature') }}"
+          icon_template: hass:thermometer
+          unit_of_measurement: "ºC"
+        sensibo_setpoint_temp:
+          friendly_name: "Mål-temperatur"
+          value_template: "{{ state_attr('climate.varmepumpe', 'temperature') }}"
+          icon_template: hass:thermometer
+          unit_of_measurement: "ºC"
+        sensibo_current_humidity:
+          friendly_name: "Fuktighet"
+          value_template: "{{ state_attr('climate.varmepumpe', 'current_humidity') }}"
+          icon_template: hass:water-percent
+          unit_of_measurement: "%"
+        sensibo_fan_mode:
+          friendly_name: "Vifte"
+          value_template: "{{ state_attr('climate.varmepumpe', 'fan_mode') }}"
+          icon_template: hass:fan
+        sensibo_swing_mode:
+          friendly_name: "Spjeld"
+          value_template: "{{ state_attr('climate.varmepumpe', 'swing_mode') }}"
+          icon_template: hass:code-tags
+        sensibo_fan_mode_f:
+          friendly_name: "Vifte"
+          value_template: >
+            {% set v = state_attr('climate.varmepumpe', 'fan_mode') %}
+            {% if v == 'quiet' %}
+              Stille
+            {% elif v == 'low' %}
+              Lav
+            {% elif v == 'medium' %}
+              Medium
+            {% elif v == 'high' %}
+              Høy
+            {% elif v == 'auto' %}
+              Auto
+            {% elif v == 'strong' %}
+              Sterk
+            {% else %}
+              Ukjent
+            {% endif %}
+          icon_template: hass:fan
+        sensibo_swing_mode_f:
+          friendly_name: "Svingmodus"
+          value_template: >
+            {% set s = state_attr('climate.varmepumpe', 'swing_mode') %}
+            {% if s == 'stopped' %}
+              Stopp
+            {% elif s == 'rangeFull' %}
+              Ned
+            {% elif s == 'horizontal' %}
+              Flatt
+            {% elif s == 'both' %}
+              Sving
+            {% else %}
+              Ukjent
+            {% endif %}
+          icon_template: hass:code-tags
+        
+    # Get Stue temperature min and max values from statistics
+    - platform: statistics
+      name: netatmo_stue_temperature_min
+      entity_id: sensor.netatmo_stue_temperature
+      state_characteristic: value_min
+      precision: 1 
+      sampling_size: 120
+      max_age:
+        hours: 24
+
+    - platform: statistics
+      name: netatmo_stue_temperature_max
+      entity_id: sensor.netatmo_stue_temperature
+      state_characteristic: value_max
+      precision: 1 
+      sampling_size: 120
+      max_age:
+        hours: 24    
+
+    # Get Outside temperature min and max values from statistics
+    - platform: statistics
+      name: netatmo_ute_temperature_min
+      entity_id: sensor.netatmo_ute_temperature
+      state_characteristic: value_min
+      precision: 1 
+      sampling_size: 120
+      max_age:
+        hours: 24
+
+    - platform: statistics
+      name: netatmo_ute_temperature_max
+      entity_id: sensor.netatmo_ute_temperature
+      state_characteristic: value_max
+      precision: 1 
+      sampling_size: 120
+      max_age:
+        hours: 24    
+
+    # Get Kontor temperature min and max values from statistics
+    - platform: statistics
+      name: netatmo_kontor_temperature_min
+      entity_id: sensor.netatmo_kontor_temperature
+      state_characteristic: value_min
+      precision: 1 
+      sampling_size: 120
+      max_age:
+        hours: 24
+
+    - platform: statistics
+      name: netatmo_kontor_temperature_max
+      entity_id: sensor.netatmo_kontor_temperature
+      state_characteristic: value_max
+      precision: 1 
+      sampling_size: 120
+      max_age:
+        hours: 24    
+
+    # Get Soverom temperature min and max values from statistics
+    - platform: statistics
+      name: netatmo_soverom_temperature_min
+      entity_id: sensor.netatmo_soverom_temperature
+      state_characteristic: value_min
+      precision: 1 
+      sampling_size: 120
+      max_age:
+        hours: 24
+
+    - platform: statistics
+      name: netatmo_soverom_temperature_max
+      entity_id: sensor.netatmo_soverom_temperature
+      state_characteristic: value_max
+      precision: 1 
+      sampling_size: 120
+      max_age:
+        hours: 24    
+
+    - platform: template
+      sensors:
+        # Get formatted seal level pressure
+        netatmo_stue_pressure_f:
+          friendly_name: "Netatmo Lufttrykk"
+          unit_of_measurement: "hPa"
+          value_template: >
+            {% set lpres = states('sensor.netatmo_stue_pressure')|float %}
+            {% set temp = states('sensor.netatmo_ute_temperature')|float %}
+            {% set alt = 142 |float %}
+            {{ '{0:.1f}'.format(lpres / (1 - ((0.0065 * alt) / (temp + (0.0065 * alt) + 273.15))) ** 5.257 |float) }}
+          icon_template: mdi:gauge
+
+    # Get Outside temperature change rate
+    - platform: derivative
+      source: sensor.netatmo_ute_temperature
+      name: Netatmo ute temp change per hour
+      round: 1
+      unit_time: h 
+      time_window: "01:00:00"
+  
+  # Create climate automations
+  automation:
+
+    # Temp setback at door open 
+    - alias: "Temperature setback at door open for 5 minutes"
+      trigger:
+        platform: state
+        entity_id: binary_sensor.exterior_doors
+        from: 'off'
+        to: 'on'
+        for:
+          minutes: 5
+      condition:
+        - condition: state
+          entity_id: input_boolean.temp_setback_door_open_state
+          state: 'off'
+        - condition: template
+          value_template: "{{ trigger.from_state.state != 'unavailable' }}"
+      action:
+        - service: input_boolean.turn_on
+          entity_id: input_boolean.temp_setback_door_open_state
+        - service: climate.set_temperature
+          data_template:
+            entity_id: climate.varmepumpe
+            temperature: "{{ states('sensor.sensibo_setpoint_temp') | int - states('input_number.slider_temp_setback_door_open') | int }}"
+        - service: climate.turn_off
+          entity_id: group.climate_open_door_affected
+
+    # Temp setback restore at door closed
+    - alias: "Temperature setback restore at door closed"
+      trigger:
+        platform: state
+        entity_id: binary_sensor.exterior_doors
+        from: 'on'
+        to: 'off'
+      condition:
+        - condition: state
+          entity_id: input_boolean.temp_setback_door_open_state
+          state: 'on'              
+        - condition: template
+          value_template: "{{ trigger.from_state.state != 'unavailable' }}"
+      action:
+        - service: input_boolean.turn_off 
+          entity_id: input_boolean.temp_setback_door_open_state
+        - service: climate.set_temperature
+          data_template:
+            entity_id: climate.varmepumpe
+            temperature: "{{ states('sensor.sensibo_setpoint_temp') | int + states('input_number.slider_temp_setback_door_open') | int }}"
+        - service: climate.turn_on
+          entity_id: group.climate_open_door_affected
+
+    # Temp setback at night - start
+    - alias: "Temperature setback night start"
+      trigger:
+        - platform: template
+          value_template: "{{ states('sensor.time')[0:5] == states('input_datetime.temp_setback_night_start_time')[0:5] }}"
+      condition:
+        condition: and
+        conditions:
+          - condition: state
+            entity_id: input_boolean.temp_setback_night_switch
+            state: 'on'
+          - condition: state
+            entity_id: input_boolean.temp_setback_night_state
+            state: 'off'
+          - condition: time
+            weekday:
+            - sun
+            - mon
+            - tue
+            - wed
+            - thu
+            - fri
+      action:
+        - service: input_boolean.turn_on 
+          entity_id: input_boolean.temp_setback_night_state
+        - service: climate.set_temperature
+          data_template:
+            entity_id:
+              - climate.varmepumpe
+            temperature: "{{ states('sensor.sensibo_setpoint_temp') | int - states('input_number.slider_temp_setback_night') | int }}"
+        - service: climate.set_temperature
+          data_template:
+            entity_id:
+              - climate.spisestue
+            temperature: "{{ state_attr('climate.spisestue', 'temperature') | int - states('input_number.slider_temp_setback_night') | int }}"
+        - service: climate.set_temperature
+          data_template:
+            entity_id:
+              - climate.stue
+            temperature: "{{ states('sensor.mill_stue_setpoint_temp') | int - states('input_number.slider_temp_setback_night') | int }}"  
+        - service: climate.set_temperature
+          data_template:
+            entity_id:
+              - climate.kjellerstue
+            temperature: "{{ states('sensor.mill_kjellerstue_setpoint_temp') | int - states('input_number.slider_temp_setback_night') | int }}"  
+            
+    # Temp setback at night - end
+    - alias: "Temperature setback night end"
+      trigger:
+        - platform: template
+          value_template: "{{ states('sensor.time')[0:5] == states('input_datetime.temp_setback_night_end_time')[0:5] }}"
+      condition:
+        condition: and
+        conditions:
+          - condition: state
+            entity_id: input_boolean.temp_setback_night_state
+            state: 'on'
+          - condition: time
+            weekday:
+            - mon
+            - tue
+            - wed
+            - thu
+            - fri
+            - sat
+      action:
+        - service: input_boolean.turn_off 
+          entity_id: input_boolean.temp_setback_night_state
+        - service: climate.set_temperature
+          data_template:
+            entity_id:
+              - climate.varmepumpe
+            temperature: "{{ states('sensor.sensibo_setpoint_temp') | int + states('input_number.slider_temp_setback_night') | int }}"
+        - service: climate.set_temperature
+          data_template:
+            entity_id:
+              - climate.spisestue
+            temperature: "{{ state_attr('climate.spisestue', 'temperature') | int + states('input_number.slider_temp_setback_night') | int }}"
+        - service: climate.set_temperature
+          data_template:
+            entity_id:
+              - climate.stue
+            temperature: "{{ states('sensor.mill_stue_setpoint_temp') | int + states('input_number.slider_temp_setback_night') | int }}"  
+        - service: climate.set_temperature
+          data_template:
+            entity_id:
+              - climate.kjellerstue
+            temperature: "{{ states('sensor.mill_kjellerstue_setpoint_temp') | int + states('input_number.slider_temp_setback_night') | int }}"  
+
+    # Office high CO2
+    - alias: "Office high CO2"
+      trigger:
+        platform: numeric_state
+        entity_id: sensor.netatmo_kontor_co2
+        above: 1500
+      action:
+        service: notify.mobile_app_arve_sin_iphone
+        data_template:
+          title: Høyt CO2-nivå på kontoret
+          message: "CO2-nivå er nå {{ states('sensor.netatmo_kontor_co2') }} ppm"
+    # Office CO2 back to normal"
+    - alias: "Office CO2 OK"
+      trigger:
+        platform: numeric_state
+        entity_id: sensor.netatmo_kontor_co2
+        below: 1500
+      action:
+        service: notify.mobile_app_arve_sin_iphone
+        data_template:
+          title: CO2-nivå på kontoret er OK    
+          message: "CO2-nivå er nå {{ states('sensor.netatmo_kontor_co2') }} ppm"      

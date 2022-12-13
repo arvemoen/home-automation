@@ -1,37 +1,3 @@
-# New version of Home Assistant is available
-- alias: "Update notifications"
-  trigger:
-    platform: state
-    entity_id: binary_sensor.updater
-  action:
-    service: notify.mobile_app_arve_sin_iphone
-    data_template:
-      title: Ny hass vesion
-      message: "Home Assistant {{ state_attr('binary_sensor.updater', 'newest_version') }} er tilgjengelig"
-
-# Network speed dropped
-- alias: "Network speed notification"
-  trigger:
-    platform: numeric_state
-    entity_id: sensor.real_speedtest_download
-    below: 100
-  action:
-    service: notify.mobile_app_arve_sin_iphone
-    data_template:
-      title: Netverkshastighet redusert 
-      message: "Nedlastingshastigheten er nå {{ states('sensor.real_speedtest_download') }} Mbps"
-# Network speed ok again
-- alias: "Network speed notification OK"
-  trigger:
-    platform: numeric_state
-    entity_id: sensor.real_speedtest_download
-    above: 100
-  action:
-    service: notify.mobile_app_arve_sin_iphone
-    data_template:
-      title: Netverkshastighet er OK   
-      message: "Nedlastingshastigheten er nå {{ states('sensor.real_speedtest_download') }} Mbps"
-
 # Freezer high temperatue
 - alias: "Freezer temperature too high"
   trigger:
@@ -54,29 +20,6 @@
     data_template:
       title: Temperatur i fryser er OK
       message: "Temperaturen er nå {{ states('sensor.fryser_temperature') }} ºC"      
-
-# Jacuzzi low temperatue
-- alias: "Jacuzzi temperature too low"
-  trigger:
-    platform: numeric_state
-    entity_id: sensor.jacuzzi_temperature
-    below: 32
-  action:
-    service: notify.mobile_app_arve_sin_iphone
-    data_template:
-      title: Temperatur i jacuzzi er lav 
-      message: "Temperaturen er nå {{ states('sensor.jacuzzi_temperature') }} ºC"
-# Jacuzzi temperature back to normal"
-- alias: "Jacuzzi temperature OK"
-  trigger:
-    platform: numeric_state
-    entity_id: sensor.jacuzzi_temperature
-    above: 32
-  action:
-    service: notify.mobile_app_arve_sin_iphone
-    data_template:
-      title: Temperatur i jacuzzi er OK
-      message: "Temperaturen er nå {{ states('sensor.jacuzzi_temperature') }} ºC"      
 
 # Toolshed low temperatue
 - alias: "Toolshed temperature too low"
@@ -101,29 +44,6 @@
       title: Temperatur i utebod er OK    
       message: "Temperaturen er nå {{ states('sensor.utebod_temperature') }} ºC"      
       
-# Office high CO2
-- alias: "Office high CO2"
-  trigger:
-    platform: numeric_state
-    entity_id: sensor.netatmo_ws1_stue_kontor_co2
-    above: 1500
-  action:
-    service: notify.mobile_app_arve_sin_iphone
-    data_template:
-      title: Høyt CO2-nivå på kontoret
-      message: "CO2-nivå er nå {{ states('sensor.netatmo_ws1_stue_kontor_co2') }} ppm"
-# Office CO2 back to normal"
-- alias: "Office CO2 OK"
-  trigger:
-    platform: numeric_state
-    entity_id: sensor.netatmo_ws1_stue_kontor_co2
-    below: 1500
-  action:
-    service: notify.mobile_app_arve_sin_iphone
-    data_template:
-      title: CO2-nivå på kontoret er OK    
-      message: "CO2-nivå er nå {{ states('sensor.netatmo_ws1_stue_kontor_co2') }} ppm"      
-
 # Low battery level detection & notification for all battery sensors
 # Source: https://gist.github.com/sbyx/1f6f434f0903b872b84c4302637d0890
 - alias: "Low battery level"
@@ -154,14 +74,3 @@
     data_template:
       title: Batteri snart tomt    
       message: "{{ sensors }}"      
-
-# No change in temperatur from jacuzzi
-- alias: "Jacuzzi no temperature data received"
-  trigger:
-    - platform: template
-      value_template: "{{ states('sensor.jacuzzi_temperature_max') == states('sensor.jacuzzi_temperature_min') }}"
-  action:
-    service: notify.mobile_app_arve_sin_iphone
-    data_template:
-      title: Jacuzzi  
-      message: "Ingen data mottatt!"     

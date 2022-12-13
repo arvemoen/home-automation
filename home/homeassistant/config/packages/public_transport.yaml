@@ -1,0 +1,10 @@
+public_transport_package:
+
+  # Create public transport sensors (Using entities from the Entur public transport integration) 
+  sensor:
+  
+    - platform: entur_public_transport
+      stop_ids:
+        - !secret entur_nsr_1
+      number_of_departures: 4
+      

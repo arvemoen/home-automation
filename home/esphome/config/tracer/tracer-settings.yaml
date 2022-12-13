@@ -11,6 +11,21 @@ sensor:
     register_type: holding
     value_type: U_WORD
 
+  # - platform: modbus_controller
+  #   modbus_controller_id: epever
+  #   id: high_voltage_disconnect
+  #   address: 0x9003
+  #   name: ${friendly_name} high Voltage disconnect
+  #   unit_of_measurement: "V"
+  #   device_class: voltage
+  #   skip_updates: 10
+  #   icon: mdi:alpha-v-circle-outline
+  #   register_type: holding
+  #   value_type: U_WORD
+  #   accuracy_decimals: 1
+  #   filters:
+  #     - multiply: 0.01
+
   - platform: modbus_controller
     modbus_controller_id: epever
     id: charging_limit_voltage
@@ -25,6 +40,21 @@ sensor:
     accuracy_decimals: 1
     filters:
       - multiply: 0.01
+
+  # - platform: modbus_controller
+  #   modbus_controller_id: epever
+  #   id: over_voltage_reconnect
+  #   address: 0x9005
+  #   name: ${friendly_name} over voltage reconnect
+  #   unit_of_measurement: "V"
+  #   device_class: voltage
+  #   skip_updates: 10
+  #   icon: mdi:alpha-v-circle-outline
+  #   register_type: holding
+  #   value_type: U_WORD
+  #   accuracy_decimals: 1
+  #   filters:
+  #     - multiply: 0.01
 
   - platform: modbus_controller
     modbus_controller_id: epever
@@ -71,6 +101,51 @@ sensor:
     filters:
       - multiply: 0.01
 
+  # - platform: modbus_controller
+  #   modbus_controller_id: epever
+  #   id: boost_reconnect_voltage
+  #   address: 0x9009
+  #   name: ${friendly_name} boost reconnect voltage
+  #   unit_of_measurement: "V"
+  #   device_class: voltage
+  #   skip_updates: 10
+  #   icon: mdi:alpha-v-circle-outline
+  #   register_type: holding
+  #   value_type: U_WORD
+  #   accuracy_decimals: 1
+  #   filters:
+  #     - multiply: 0.01
+
+  # - platform: modbus_controller
+  #   modbus_controller_id: epever
+  #   id: low_voltage_reconnect
+  #   address: 0x900A
+  #   name: ${friendly_name} low voltage reconnect
+  #   unit_of_measurement: "V"
+  #   device_class: voltage
+  #   skip_updates: 10
+  #   icon: mdi:alpha-v-circle-outline
+  #   register_type: holding
+  #   value_type: U_WORD
+  #   accuracy_decimals: 1
+  #   filters:
+  #     - multiply: 0.01
+
+  # - platform: modbus_controller
+  #   modbus_controller_id: epever
+  #   id: under_voltage_recover
+  #   address: 0x900B
+  #   name: ${friendly_name} under voltage recover
+  #   unit_of_measurement: "V"
+  #   device_class: voltage
+  #   skip_updates: 10
+  #   icon: mdi:alpha-v-circle-outline
+  #   register_type: holding
+  #   value_type: U_WORD
+  #   accuracy_decimals: 1
+  #   filters:
+  #     - multiply: 0.01
+
   - platform: modbus_controller
     modbus_controller_id: epever
     id: under_voltage_warning
@@ -101,20 +176,87 @@ sensor:
     filters:
       - multiply: 0.01
 
-  - platform: modbus_controller
-    modbus_controller_id: epever
-    id: discharging_limit_voltage
-    address: 0x900E
-    name: ${friendly_name} discharging limit voltage
-    unit_of_measurement: "V"
-    device_class: voltage
-    skip_updates: 10
-    icon: mdi:alpha-v-circle-outline
-    register_type: holding
-    value_type: U_WORD
-    accuracy_decimals: 1
-    filters:
-      - multiply: 0.01
+  # - platform: modbus_controller
+  #   modbus_controller_id: epever
+  #   id: discharging_limit_voltage
+  #   address: 0x900E
+  #   name: ${friendly_name} discharging limit voltage
+  #   unit_of_measurement: "V"
+  #   device_class: voltage
+  #   skip_updates: 10
+  #   icon: mdi:alpha-v-circle-outline
+  #   register_type: holding
+  #   value_type: U_WORD
+  #   accuracy_decimals: 1
+  #   filters:
+  #     - multiply: 0.01
+
+  # - platform: modbus_controller
+  #   modbus_controller_id: epever
+  #   id: equalization_charging_cycle
+  #   address: 0x9016
+  #   name: ${friendly_name} equalization charging cycle
+  #   unit_of_measurement: "days"
+  #   skip_updates: 10
+  #   icon: mdi:clock
+  #   register_type: holding
+  #   value_type: U_WORD
+
+  # - platform: modbus_controller
+  #   modbus_controller_id: epever
+  #   id: battery_temperature_warning_upper_limit
+  #   address: 0x9017
+  #   name: ${friendly_name} battery temperature warning upper limit
+  #   unit_of_measurement: "°C"
+  #   device_class: temperature
+  #   skip_updates: 10
+  #   register_type: holding
+  #   value_type: S_WORD
+  #   accuracy_decimals: 1
+  #   filters:
+  #     - multiply: 0.01
+
+  # - platform: modbus_controller
+  #   modbus_controller_id: epever
+  #   id: battery_temperature_warning_lower_limit
+  #   address: 0x9018
+  #   name: ${friendly_name} battery temperature warning lower limit
+  #   unit_of_measurement: "°C"
+  #   device_class: temperature
+  #   skip_updates: 10
+  #   register_type: holding
+  #   value_type: S_WORD
+  #   accuracy_decimals: 1
+  #   filters:
+  #     - multiply: 0.01
+
+  # - platform: modbus_controller
+  #   modbus_controller_id: epever
+  #   id: device_temperature_upper_limit
+  #   address: 0x9019
+  #   name: ${friendly_name} device temperature upper limit
+  #   unit_of_measurement: "°C"
+  #   device_class: temperature
+  #   skip_updates: 10
+  #   register_type: holding
+  #   value_type: S_WORD
+  #   accuracy_decimals: 1
+  #   filters:
+  #     - multiply: 0.01
+
+  # - platform: modbus_controller
+  #   modbus_controller_id: epever
+  #   id: device_temperature_upper_limit_recover
+  #   address: 0x901A
+  #   name:  ${friendly_name} device temperature upper limit recover"
+  #   unit_of_measurement: "°C"
+  #   device_class: temperature
+  #   skip_updates: 10
+  #   register_type: holding
+  #   value_type: S_WORD
+  #   accuracy_decimals: 1
+  #   filters:
+  #     - multiply: 0.01
 
   - platform: modbus_controller 
     modbus_controller_id: epever
@@ -173,6 +315,7 @@ sensor:
   #   address: 0x906D
   #   unit_of_measurement: "%"
   #   skip_updates: 10
+  #   device_class: battery
   #   register_type: holding
   #   value_type: U_WORD
   #   accuracy_decimals: 0
@@ -183,6 +326,7 @@ sensor:
   #   name: ${friendly_name} charging percentage
   #   address: 0x906E
   #   unit_of_measurement: "%"
+  #   skip_updates: 10
   #   device_class: battery
   #   register_type: holding
   #   value_type: U_WORD

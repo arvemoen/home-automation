@@ -22,6 +22,9 @@ homeassistant:
 
   # Currency
   currency: NOK
+
+  # Country
+  country: "NO"
   
   # customization
   customize: !include customize/customize.yaml
@@ -35,6 +38,12 @@ homeassistant:
   # allowlist_external_urls:
   #   - "http://images.com/image1.png"  
 
+  # Packages
+  packages: !include_dir_merge_named packages/
+  
+# Energy dashboard
+energy:
+
 # http config (for reverse proxy)
 http:
   use_x_forwarded_for: true
@@ -42,7 +51,6 @@ http:
     - 172.19.0.1     # IP address of the gateway of the docker iot-net network.
 
 # Enables the frontend
-#frontend: !include config_files/frontend.yaml
 frontend: 
   themes: !include_dir_merge_named themes/
   extra_module_url:
@@ -51,11 +59,6 @@ frontend:
 # Enables configuration UI
 config:
 #  !include config_files/http.yaml
-
-# Checks for available updates
-updater:
-  # Optional, allows Home Assistant developers to focus on popular components.
-  # include_used_components: true
 
 # Discover some devices automatically
 # discovery:
@@ -73,26 +76,20 @@ history:
 # View all events in a logbook
 logbook:
 
-# Logger stup
-logger: !include config_files/logger.yaml
+# Enable backup
+backup:
 
-# Track the sun
-sun:
-
-# System Helth monitoring
-system_health:
+# Logger setup
+logger: 
+  default: info
+  logs:
+    homeassistant.components.http.ban: warning
 
 # Scenes
 scene: !include scenes.yaml  
 
 # Lights
 light: !include lights.yaml
-
-# Scripts
-# script: !include scripts.yaml
-
-# Groups
-group: !include groups.yaml
 
 # Mobile
 mobile_app:
@@ -101,31 +98,8 @@ ios:
 # Speedtest (Does not work well in a docker container)
 # speedtestdotnet:
 
-# Google 
-google:
-  client_id: !secret google_client_id
-  client_secret: !secret google_client_secret
-  track_new_calendar: false
-
-# Config
-input_boolean: !include config_files/input_boolean.yaml
-input_number: !include config_files/input_number.yaml
-input_datetime: !include config_files/input_datetime.yaml
-input_select: !include config_files/input_select.yaml
-netatmo: !include config_files/netatmo.yaml  
-verisure: !include config_files/verisure.yaml
-air_quality: !include config_files/air_quality.yaml
-mqtt: !include config_files/mqtt.yaml
-tradfri: !include config_files/tradfri.yaml
-climate: !include config_files/climate.yaml
-duckdns: !include config_files/duckdns.yaml
-
-# Sensor
-sensor: !include_dir_merge_list sensor/sensor/
-binary_sensor: !include_dir_merge_list sensor/binary_sensor/
-
-# Switch
-switch: !include_dir_merge_list switch/
+# Utility Meter
+utility_meter: !include_dir_merge_list utility_meter/
 
 # Automation
 automation: !include_dir_merge_list automation/

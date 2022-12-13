@@ -1,0 +1,23 @@
+security_package:
+
+  # Create security binary sensors
+  binary_sensor:
+  
+    - platform: group
+      name: All doors
+      device_class: door
+      entities:
+        - binary_sensor.balkongdor
+        - binary_sensor.sokkeldor
+        - binary_sensor.inngangsdor
+        - binary_sensor.uteboddor_contact_alarm
+        - binary_sensor.inneboddor_contact_alarm
+
+    - platform: group
+      name: Exterior doors
+      device_class: door
+      entities:
+        - binary_sensor.balkongdor
+        - binary_sensor.sokkeldor
+        - binary_sensor.inngangsdor 
+

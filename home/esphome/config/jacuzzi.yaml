@@ -5,8 +5,8 @@ substitutions:
   updates: 10s            # Update interval
   run_duration: 10s       # Run duration
   sleep_duration: 20min   # Deep sleep duration
-  max_batt_volt: '3.2'    # Full (new 2*AA alkaline) battery voltage
-  min_batt_volt: '2.4'    # Empty battery voltage (too low to run device)
+  max_batt_volt: '3.24'   # Full (new 2*AA alkaline) battery voltage
+  min_batt_volt: '2.29'   # Empty battery voltage (too low to run device)
 
 # Setup esphome device
 esphome:
@@ -64,6 +64,7 @@ sensor:
     retain: true
     # Get one sensor reading
     filters:
+      - filter_out: nan
       - min:
 
   # Wifi signal sensor
@@ -73,6 +74,7 @@ sensor:
     update_interval: ${updates} 
     # Get one sensor reading
     filters:
+      - filter_out: nan
       - min:
     
   # Device VCC voltage sensor (internal)
@@ -82,6 +84,7 @@ sensor:
     id: vcc_voltage
     update_interval: ${updates} 
     filters:
+      - filter_out: nan
       - min:
     
   # Battery level sensor
@@ -94,6 +97,7 @@ sensor:
     lambda: |-
       return ((id(vcc_voltage).state - ${min_batt_volt}) / (${max_batt_volt} - ${min_batt_volt}) * 100);  
     filters:
+      - filter_out: nan
       - min:
   
 # Enable deep sleep
@@ -110,17 +114,17 @@ mqtt:
   discovery: true
   discovery_retain: true
   discovery_prefix: !secret mqtt_discovery_prefix
-  # Use empty birth/will messages with deep sleep to avoid sensor "unknown" status in homeass
+  # Use empty birth/will messages with deep sleep to avoid sensor "unknown" status in homeassistant
   birth_message:
   will_message:
   on_message:
     # Use to turn on OTA mode
     - topic: ${device_name}/ota_mode
-      payload: 'ON'
+      payload: 'on'
       then:
         - deep_sleep.prevent: deep_sleep_1
     # Use to turn on sleep mode
     - topic: ${device_name}/sleep_mode
-      payload: 'ON'
+      payload: 'on'
       then:
         - deep_sleep.enter: deep_sleep_1  

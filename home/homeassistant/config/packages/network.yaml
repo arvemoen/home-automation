@@ -1,0 +1,76 @@
+network_package:
+
+  # DuckDNS config
+  duckdns:
+    domain: !secret duckdns_domain
+    access_token: !secret duckdns_access_token
+
+  # Create Network binary sensors
+  binary_sensor: 
+
+    - platform: ping
+      host: !secret ip_netgear_orbi_router
+      name: Netgear Orbi Router
+      count: 2
+      scan_interval: 300
+
+    - platform: ping
+      host: !secret ip_netgear_orbi_setelitt1
+      name: Netgear Orbi Satelitt1
+      count: 2
+      scan_interval: 300 
+      
+    - platform: ping
+      host: !secret ip_netgear_orbi_setelitt2
+      name: Netgear Orbi Satelitt2
+      count: 2
+      scan_interval: 300 
+      
+    - platform: ping
+      host: !secret ip_netatmo_ws1
+      name: Netatmo WS1
+      count: 2
+      scan_interval: 300 
+
+    - platform: ping
+      host: !secret ip_homey
+      name: Homey
+      count: 2
+      scan_interval: 300
+
+    - platform: ping
+      host: !secret ip_telldus
+      name: Telldus
+      count: 2
+      scan_interval: 300  
+
+    - platform: ping
+      host: !secret ip_verisure_alarm
+      name: Verisure Alarm
+      count: 2
+      scan_interval: 300  
+
+    - platform: ping
+      host: !secret ip_tradfri_gateway
+      name: Trådfri Gateway
+      count: 2
+      scan_interval: 300    
+
+    - platform: ping
+      host: !secret ip_sonos_one
+      name: Sonos One
+      count: 2
+      scan_interval: 300  
+      
+    - platform: ping
+      host: !secret ip_brother_mfc_printer
+      name: Brother MFC printer
+      count: 2
+      scan_interval: 300    
+
+    - platform: ping
+      host: !secret ip_timecapsule
+      name: Timecapsule
+      count: 2
+      scan_interval: 300      
+

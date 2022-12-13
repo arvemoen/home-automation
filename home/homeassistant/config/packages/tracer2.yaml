@@ -1,0 +1,296 @@
+# Package holding extra entities and automations to be used by Home Assistant for 
+# Tracer2 - Wireless monitoring and control of EPever Solar Charge Controller 
+
+tracer2_package:
+
+  # Create Tracer2 binary sensors
+  # Entities comes from the Tracer2 ESPHome programmed device using the MQTT integration
+  binary_sensor:
+
+    - platform: template
+      sensors:
+        tracer2_load_used:
+          friendly_name: Tracer2 load used
+          value_template: > # Only register load > 2W
+            {{ states('sensor.tracer2_load_power')|float > 2.0 }}
+
+  # Create Tracer2 sensors
+  # Entities comes from the Tracer2 ESPHome programmed device using the MQTT integration
+  sensor:
+
+    - platform: history_stats
+      name: Tracer2 load duration 
+      entity_id: binary_sensor.tracer2_load_used
+      state: "on"
+      type: time
+      start: "{{ now().replace(hour=0, minute=0, second=0) }}" # Midnight
+      end: "{{ now() }}"
+
+    - platform: template
+      sensors:
+        tracer2_uptime_relative:
+          friendly_name: Tracer2 uptime relative
+          value_template: > 
+            {{ relative_time( now() - timedelta( seconds = states('sensor.tracer2_uptime').rstrip('seconds') | int )) }}
+          icon_template: mdi:clock
+
+        tracer2_last_changed_formatted:
+          friendly_name: Tracer2 last changed formatted
+          value_template: > 
+            {{ as_timestamp(states.sensor.tracer2_uptime.last_changed) | timestamp_custom('%H:%M:%S') }}
+          icon_template: mdi:clock
+      
+        tracer2_charging_mode_text:
+          friendly_name: Tracer2 charging mode text
+          value_template: >
+            {% set s = states('sensor.tracer2_charging_mode') %}
+            {% if  s == 'unavailable' %}
+              {{ s }} 
+            {% else %}
+              {% if s|int == 0 %}
+                Lader ikke
+              {% elif s|int == 1 %}
+                Float
+              {% elif s|int == 2 %}
+                Boost
+              {% elif s|int == 3 %}
+                Equlize
+              {% else %}
+                ukjent
+              {% endif %}
+            {% endif %}  
+
+        tracer2_battery_status_text:
+          friendly_name: Tracer2 battery status text
+          value_template: >
+            {% set s = states('sensor.tracer2_battery_status') %}
+            {% if  s == 'unavailable' %}
+              {{ s }} 
+            {% else %}
+              {% if s|int == 0 %}
+                Normal
+              {% elif s|int == 1 %}
+                Høy spenning
+              {% elif s|int == 2 %}
+                Lav spenning
+              {% elif s|int == 3 %}
+                Last avslått
+              {% elif s|int == 4 %}
+                Feil
+              {% else %}
+                ukjent
+              {% endif %}
+            {% endif %}  
+
+        tracer2_load_controlling_mode_text:
+          friendly_name: Tracer2 load controlling mode text
+          value_template: >
+            {% set s = states('sensor.tracer2_load_controlling_mode') %}
+            {% if  s == 'unavailable' %}
+              {{ s }} 
+            {% else %}
+              {% if s|int == 0 %}
+                Manuell
+              {% elif s|int == 1 %}
+                Lys på/av
+              {% elif s|int == 2 %}
+                Lys på + timer
+              {% elif s|int == 3 %}
+                Tidsstyrt
+              {% else %}
+                ukjent
+              {% endif %}
+            {% endif %}  
+
+        tracer2_charging_management_mode_text:
+          friendly_name: Tracer2 charging management mode text
+          value_template: >
+            {% set s = states('sensor.tracer2_charging_management_mode') %}
+            {% if  s == 'unavailable' %}
+              {{ s }} 
+            {% else %}
+              {% if s|int == 0 %}
+                Spenningsstyrt
+              {% elif s|int == 1 %}
+                SOC-styrt
+              {% else %}
+                ukjent
+              {% endif %}
+            {% endif %}  
+
+        tracer2_outside_sea_level_pressure_formatted:
+          friendly_name: Tracer2 sea level pressure formatted
+          unit_of_measurement: "hPa"
+          value_template: >
+            {{ '{0:.0f}'.format(
+            states('sensor.tracer2_outside_sea_level_pressure')|float
+            ) }}
+          icon_template: mdi:gauge
+        
+        tracer2_battery_current_total:
+          friendly_name: Tracer2 battery current total
+          unit_of_measurement: "A"
+          value_template: >
+            {{ '{0:.2f}'.format(
+            states('sensor.tracer2_battery_current')|float -
+            states('sensor.tracer2_self_current')|float
+            ) }}
+          icon_template: mdi:current-dc
+
+        tracer2_battery_power_total:
+          friendly_name: Tracer2 battery power total
+          unique_id: tracer2_battery_power_total
+          unit_of_measurement: "W"
+          device_class: power
+          value_template: >
+            {{ '{0:.1f}'.format(
+            states('sensor.tracer2_charging_power')|float -
+            states('sensor.tracer2_self_power')|float -
+            states('sensor.tracer2_load_power')|float
+            ) }}
+
+        tracer2_battery_power_in:
+          friendly_name: Tracer2 battery power in
+          unique_id: tracer2_battery_power_in
+          unit_of_measurement: "W"
+          device_class: power
+          value_template: >
+            {{ '{0:.1f}'.format(
+            states('sensor.tracer2_charging_power')|float
+            ) }} 
+
+        tracer2_battery_power_out:
+          friendly_name: Tracer2 battery power out
+          unique_id: tracer2_battery_power_out
+          unit_of_measurement: "W"
+          device_class: power
+          value_template: >
+            {{ '{0:.1f}'.format(
+            states('sensor.tracer2_self_power')|float +
+            states('sensor.tracer2_load_power')|float
+            ) }} 
+
+        tracer2_load_duration_formatted:
+          friendly_name: Tracer2 load duration formatted
+          value_template: > 
+            {% set s = states('sensor.tracer2_load_duration')|float %}
+            {{ (s * 3600)|timestamp_custom('%H:%M:%S', false) }}
+          icon_template: mdi:clock
+
+        tracer2_pv_exposed_text:
+          friendly_name: Tracer2 PV exposed text
+          value_template: > 
+            {% set s = states('sensor.tracer2_pv_voltage')|float %}
+            {% if s|int <= 0 %}
+              Mørkt
+            {% elif s|int > 0 %}
+              Belyst
+            {% else %}
+              ukjent
+            {% endif %}
+          icon_template: mdi:white-balance-sunny
+    
+  #   # Create Tracer energy sensors
+    
+  #   - platform: integration
+  #     source: sensor.tracer2_pv_power
+  #     name: Tracer2 PV energy production
+  #     unique_id: tracer2_pv_energy_production
+  #     method: left
+  #     # unit_prefix: k
+  #     round: 1
+
+  #   - platform: integration
+  #     source: sensor.tracer2_battery_power_in
+  #     name: Tracer2 Battery energy in
+  #     unique_id: tracer2_battery_energy_in
+  #     method: left
+  #     # unit_prefix: k
+  #     round: 1   
+
+  #   - platform: integration
+  #     source: sensor.tracer2_battery_power_out
+  #     name: Tracer2 Battery energy out
+  #     unique_id: tracer2_battery_energy_out
+  #     method: left
+  #     # unit_prefix: k
+  #     round: 1   
+
+  #   - platform: integration
+  #     source: sensor.tracer2_battery_power_total
+  #     name: Tracer2 Battery energy in out
+  #     unique_id: tracer2_battery_energy_in_out
+  #     method: left
+  #     # unit_prefix: k
+  #     round: 1
+
+  # # Tracer2 utility meters
+  # utility_meter:
+
+  #   # PV energy productiom
+  #   tracer2_pv_energy_hourly:
+  #     source: sensor.tracer2_pv_energy_production
+  #     cycle: hourly
+  #   tracer2_pv_energy_daily:
+  #     source: sensor.tracer2_pv_energy_production
+  #     cycle: daily
+  #   tracer2_pv_energy_weekly:
+  #     source: sensor.tracer2_pv_energy_production
+  #     cycle: weekly
+  #   tracer2_pv_energy_monthly:
+  #     source: sensor.tracer2_pv_energy_production
+  #     cycle: monthly
+  #   tracer2_pv_energy_yearly:
+  #     source: sensor.tracer2_pv_energy_production
+  #     cycle: yearly
+  
+  #   # Battery energy in
+  #   tracer2_battery_energy_in_hourly:
+  #     source: sensor.tracer2_battery_energy_in
+  #     cycle: hourly
+  #   tracer2_battery_energy_in_daily:
+  #     source: sensor.tracer2_battery_energy_in
+  #     cycle: daily
+  #   tracer2_battery_energy_in_weekly:
+  #     source: sensor.tracer2_battery_energy_in
+  #     cycle: weekly
+  #   tracer2_battery_energy_in_monthly:
+  #     source: sensor.tracer2_battery_energy_in
+  #     cycle: monthly
+  #   tracer2_battery_energy_in_yearly:
+  #     source: sensor.tracer2_battery_energy_in
+  #     cycle: yearly
+
+  #   # Battery energy out
+  #   tracer2_battery_energy_out_hourly:
+  #     source: sensor.tracer2_battery_energy_out
+  #     cycle: hourly
+  #   tracer2_battery_energy_out_daily:
+  #     source: sensor.tracer2_battery_energy_out
+  #     cycle: daily
+  #   tracer2_battery_energy_out_weekly:
+  #     source: sensor.tracer2_battery_energy_out
+  #     cycle: weekly
+  #   tracer2_battery_energy_out_monthly:
+  #     source: sensor.tracer2_battery_energy_out
+  #     cycle: monthly 
+  #   tracer2_battery_energy_out_yearly:
+  #     source: sensor.tracer2_battery_energy_out
+  #     cycle: yearly 
+
+  #   # Battery energy in out
+  #   tracer2_battery_energy_in_out_hourly:
+  #     source: sensor.tracer2_battery_energy_in_out
+  #     cycle: hourly
+  #   tracer2_battery_energy_in_out_daily:
+  #     source: sensor.tracer2_battery_energy_in_out
+  #     cycle: daily
+  #   tracer2_battery_energy_in_out_weekly:
+  #     source: sensor.tracer2_battery_energy_in_out
+  #     cycle: weekly
+  #   tracer2_battery_energy_in_out_monthly:
+  #     source: sensor.tracer2_battery_energy_in_out
+  #     cycle: monthly 
+  #   tracer2_battery_energy_in_out_yearly:
+  #     source: sensor.tracer2_battery_energy_in_out
+  #     cycle: yearly 

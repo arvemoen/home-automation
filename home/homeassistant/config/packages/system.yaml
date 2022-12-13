@@ -1,0 +1,67 @@
+system_package:
+
+  # System Helth monitoring
+  system_health:
+
+  # Create System sensors
+  sensor:
+
+    # System monitor
+    - platform: systemmonitor
+      resources:
+        - type: load_1m
+        - type: processor_use
+        - type: memory_use_percent
+        - type: memory_use
+        - type: swap_use_percent
+        - type: swap_use
+        - type: disk_use_percent
+          arg: /config
+        - type: last_boot
+        
+    # Current hass version
+    - platform: command_line
+      name: Version current
+      command: "hass --version"
+
+    # Certificate expiry
+    - platform: cert_expiry
+      host: !secret hass_address  
+      
+  # Create System MQTT-sensors
+  # The topics come from a Homey running the "MQTT Hub" app
+  mqtt: 
+    sensor:    
+
+    - name: MQTT Broker version
+      state_topic: "$SYS/broker/version"
+      icon: mdi:tray-full
+
+    - name: MQTT Broker uptime
+      state_topic: "$SYS/broker/uptime"
+      value_template: "{{ relative_time( now() - timedelta( seconds = value.rstrip('seconds') | int )) }}"
+      icon: mdi:clock
+
+    - name: Homey version 
+      state_topic: "homey/system/info"
+      value_template: "{{ value_json.system.homeyVersion }}" 
+      icon: mdi:circle-off-outline
+
+    - name: Homey uptime 
+      state_topic: "homey/system/info"
+      value_template: "{{ relative_time( now() - timedelta( seconds = value_json.system.uptime )) }}"
+      icon: mdi:clock  
+
+  # Create system automations
+  automation:
+
+    # New version of Home Assistant is available
+    - alias: "Update notifications"
+      trigger:
+        platform: state
+        entity_id: binary_sensor.docker_hub_update_available
+      action:
+        service: notify.mobile_app_arve_sin_iphone
+        data_template:
+          title: Ny hass vesion
+          message: "Home Assistant {{ states('sensor.docker_hub') }} er tilgjengelig"

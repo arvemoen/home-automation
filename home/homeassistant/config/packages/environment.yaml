@@ -1,0 +1,209 @@
+environment_package:
+
+  # Config air quality integrations
+  air_quality:
+  
+    # NILU - Norsk institutt for luftforskning
+    - platform: nilu
+      show_on_map: true
+
+  # Create environment sensors
+  sensor: 
+
+    # Create environment sensors (Using entities from the NILU air quality integration)
+    - platform: template
+      sensors:
+        nilu_torvet_pollution_index:
+          friendly_name: "Luftkvalitet forurensning Torvet"
+          value_template: >
+            {% set i = state_attr('air_quality.nilu_torvet', 'nilu_pollution_index') %}
+            {% if i == 'Low' %}
+              Lav
+            {% elif i == 'Moderate' %}
+              Moderat
+            {% elif i == 'High' %}
+              Høy
+            {% elif i == 'Extremely high' %}
+              Veldig høy
+            {% else %}
+              Ukjent
+            {% endif %}
+          icon_template: mdi:weather-fog
+        nilu_torvet_index_number:
+          friendly_name: "Luftkvalitet index Torvet"
+          value_template: "{{ '{0:,.1f}'.format(state_attr('air_quality.nilu_torvet', 'air_quality_index')|float) }}"
+          icon_template: mdi:weather-fog
+        nilu_torvet_no2:
+          friendly_name: "Luftkvalitet NO2 Torvet"
+          value_template: "{{ '{0:,.1f}'.format(state_attr('air_quality.nilu_torvet', 'nitrogen_dioxide')|float) }}"
+          icon_template: mdi:weather-fog
+          unit_of_measurement: "µg/m³"
+        nilu_torvet_pm10:
+          friendly_name: "Luftkvalitet PM10 Torvet"
+          value_template: "{{ '{0:,.1f}'.format(state_attr('air_quality.nilu_torvet', 'particulate_matter_10')|float) }}"
+          icon_template: mdi:weather-fog
+          unit_of_measurement: "µg/m³"
+        nilu_torvet_pm2_5:
+          friendly_name: "Luftkvalitet PM2.5 Torvet"
+          value_template: "{{ '{0:,.1f}'.format(state_attr('air_quality.nilu_torvet', 'particulate_matter_2_5')|float) }}"
+          icon_template: mdi:weather-fog
+          unit_of_measurement: "µg/m³"
+              
+        nilu_elgeseter_pollution_index:
+          friendly_name: "Luftkvalitet forurensning Elgeseter"
+          value_template: >
+            {% set i = state_attr('air_quality.nilu_elgeseter', 'nilu_pollution_index') %}
+            {% if i == 'Low' %}
+              Lav
+            {% elif i == 'Moderate' %}
+              Moderat
+            {% elif i == 'High' %}
+              Høy
+            {% elif i == 'Extremely high' %}
+              Veldig høy
+            {% else %}
+              Ukjent
+            {% endif %}
+          icon_template: mdi:weather-fog
+        nilu_elgeseter_index_number:
+          friendly_name: "Luftkvalitet index Elgeseter"
+          value_template: "{{ '{0:,.1f}'.format(state_attr('air_quality.nilu_elgeseter', 'air_quality_index')|float) }}"
+          icon_template: mdi:weather-fog
+        nilu_elgeseter_no2:
+          friendly_name: "Luftkvalitet NO2 Elgeseter"
+          value_template: "{{ '{0:,.1f}'.format(state_attr('air_quality.nilu_elgeseter', 'nitrogen_dioxide')|float) }}"
+          icon_template: mdi:weather-fog
+          unit_of_measurement: "µg/m³"
+        nilu_elgeseter_pm10:
+          friendly_name: "Luftkvalitet PM10 Elgeseter"
+          value_template: "{{ '{0:,.1f}'.format(state_attr('air_quality.nilu_elgeseter', 'particulate_matter_10')|float) }}"
+          icon_template: mdi:weather-fog
+          unit_of_measurement: "µg/m³"
+        nilu_elgeseter_pm2_5:
+          friendly_name: "Luftkvalitet PM2.5 Elgeseter"
+          value_template: "{{ '{0:,.1f}'.format(state_attr('air_quality.nilu_elgeseter', 'particulate_matter_2_5')|float) }}"
+          icon_template: mdi:weather-fog
+          unit_of_measurement: "µg/m³"
+                  
+        nilu_e6_tiller_pollution_index:
+          friendly_name: "Luftkvalitet forurensning E6 Tiller"
+          value_template: >
+            {% set i = state_attr('air_quality.nilu_e6_tiller', 'nilu_pollution_index') %}
+            {% if i == 'Low' %}
+              Lav
+            {% elif i == 'Moderate' %}
+              Moderat
+            {% elif i == 'High' %}
+              Høy
+            {% elif i == 'Extremely high' %}
+              Veldig høy
+            {% else %}
+              Ukjent
+            {% endif %}
+          icon_template: mdi:weather-fog
+        nilu_e6_tiller_index_number:
+          friendly_name: "Luftkvalitet index E6 Tiller"
+          value_template: "{{ '{0:,.1f}'.format(state_attr('air_quality.nilu_e6_tiller', 'air_quality_index')|float) }}"
+          icon_template: mdi:weather-fog
+        nilu_e6_tiller_no2:
+          friendly_name: "Luftkvalitet NO2 E6 Tiller"
+          value_template: "{{ '{0:,.1f}'.format(state_attr('air_quality.nilu_e6_tiller', 'nitrogen_dioxide')|float) }}"
+          icon_template: mdi:weather-fog
+          unit_of_measurement: "µg/m³"
+        nilu_e6_tiller_pm10:
+          friendly_name: "Luftkvalitet PM10 E6 Tiller"
+          value_template: "{{ '{0:,.1f}'.format(state_attr('air_quality.nilu_e6_tiller', 'particulate_matter_10')|float) }}"
+          icon_template: mdi:weather-fog
+          unit_of_measurement: "µg/m³"
+        nilu_e6_tiller_pm2_5:
+          friendly_name: "Luftkvalitet PM2.5 E6 Tiller"
+          value_template: "{{ '{0:,.1f}'.format(state_attr('air_quality.nilu_e6_tiller', 'particulate_matter_2_5')|float) }}"
+          icon_template: mdi:weather-fog
+          unit_of_measurement: "µg/m³"
+      
+        # nilu_bakke_kirke_pollution_index:
+        #   friendly_name: "Luftkvalitet forurensning Bakke kirk"
+        #   value_template: >
+        #     {% set i = state_attr('air_quality.nilu_bakke_kirke', 'nilu_pollution_index') %}
+        #     {% if i == 'Low' %}
+        #       Lav
+        #     {% elif i == 'Moderate' %}
+        #       Moderat
+        #     {% elif i == 'High' %}
+        #       Høy
+        #     {% elif i == 'Extremely high' %}
+        #       Veldig høy
+        #     {% else %}
+        #       Ukjent
+        #     {% endif %}
+        #   icon_template: mdi:weather-fog
+        # nilu_bakke_kirke_index_number:
+        #   friendly_name: "Luftkvalitet index Bakke kirke"
+        #   value_template: "{{ '{0:,.1f}'.format(state_attr('air_quality.nilu_bakke_kirke', 'air_quality_index')|float) }}"
+        #   icon_template: mdi:weather-fog
+        # nilu_bakke_kirke_no2:
+        #   friendly_name: "Luftkvalitet NO2 Bakke kirke"
+        #   value_template: "{{ '{0:,.1f}'.format(state_attr('air_quality.nilu_bakke_kirke', 'nitrogen_dioxide')|float) }}"
+        #   icon_template: mdi:weather-fog
+        #   unit_of_measurement: "µg/m³"
+        # nilu_bakke_kirke_pm10:
+        #   friendly_name: "Luftkvalitet PM10 Bakke kirke"
+        #   value_template: "{{ '{0:,.1f}'.format(state_attr('air_quality.nilu_bakke_kirke', 'particulate_matter_10')|float) }}"
+        #   icon_template: mdi:weather-fog
+        #   unit_of_measurement: "µg/m³"
+        # nilu_bakke_kirke_pm2_5:
+        #   friendly_name: "Luftkvalitet PM2.5 Bakke kirke"
+        #   value_template: "{{ '{0:,.1f}'.format(state_attr('air_quality.nilu_bakke_kirke', 'particulate_matter_2_5')|float) }}"
+        #   icon_template: mdi:weather-fog
+        #   unit_of_measurement: "µg/m³"
+
+    # Create environment sensors (Using entities from the OpenUV integration)
+    - platform: template
+      sensors:
+        current_uv_index_f:
+          friendly_name: "UV-index"
+          value_template: "{{ '{0:.1f}'.format(states('sensor.current_uv_index')|float) }}"
+          icon_template: mdi:weather-sunny
+        max_uv_index_f:
+          friendly_name: "UV-index"
+          value_template: "{{ '{0:.1f}'.format(states('sensor.max_uv_index')|float) }}"
+          icon_template: mdi:weather-sunny
+        current_ozone_level_f:
+          friendly_name: "Ozon-nivå"
+          value_template: "{{ '{0:.1f}'.format(states('sensor.current_ozone_level')|float) }}"
+          icon_template: mdi:weather-sunny
+        current_uv_level_f: 
+          friendly_name: "UV-nivå" 
+          value_template: >
+            {% set i = states('sensor.current_uv_level') %}
+            {% if i == 'Low' %}
+              Lav
+            {% elif i == 'Moderate' %}
+              Moderat
+            {% elif i == 'High' %}
+              Høy
+            {% elif i == 'Very High' %}
+              Veldig høy
+            {% elif i == 'Extreme' %}
+              Ekstrem høy
+            {% else %}
+              Ukjent
+            {% endif %}
+          icon_template: mdi:weather-sunny  
+
+  # Create environment automations
+  automation:
+
+    # OpenUV update automation
+    - alias: Update OpenUV every 30 minutes while the sun is at least 10 degrees above the horizon
+      trigger:
+        platform: time_pattern
+        minutes: '/30'
+      condition:
+        condition: numeric_state
+        entity_id: sun.sun
+        value_template: "{{ state_attr('sun.sun', 'elevation') }}"
+        above: 10
+      action:
+        service: openuv.update_uv_index_data
+    

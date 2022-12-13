@@ -11,10 +11,12 @@ discovery_prefix: !secret mqtt_discovery_prefix
 
 # Set birth and last will messages
 birth_message:
-  topic: "hass/status"
+  topic: "homeassistant/status"
   payload: "online"
   retain: true
 will_message:
-  topic: "hass/status"
+  topic: "homeassistant/status"
   payload: "offline"
   retain: true
+
+

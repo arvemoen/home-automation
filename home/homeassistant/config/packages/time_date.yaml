@@ -1,0 +1,120 @@
+time_date_package:
+
+  # Track the sun
+  sun:
+
+  # Create Time and Date binary sensors
+  binary_sensor:
+  
+    # Is Nerwegian workday?
+    - platform: workday
+      country: 'NO'
+      name: Workday
+      workdays: [mon, tue, wed, thu, fri]
+      excludes: [sat, sun, holiday]
+
+    # Is norwegian holiday?
+    - platform: workday
+      country: 'NO'
+      name: Holiday
+      workdays: [holiday]
+      excludes: []
+
+  # Create Time and Date sensors
+  sensor:
+
+    - platform: time_date
+      display_options:
+        - 'time'
+        - 'date'
+        - 'date_time'
+        - 'date_time_utc'
+        - 'date_time_iso'
+        - 'time_date'
+        - 'time_utc'
+        - 'beat'
+  
+    - platform: template
+      sensors:
+        season_of_year:
+          value_template: >
+            {% set s = states('sensor.season') %}
+            {% if s == 'spring' %}
+              vår
+            {% elif s == 'summer' %}
+              sommer
+            {% elif s == 'autumn' %}
+              høst
+            {% elif s == 'winter' %}
+              vinter
+            {% else %}
+              Ukjent
+            {% endif %}
+        day_of_the_week: 
+          value_template: >
+            {% set d = strptime(states('sensor.date'), '%Y-%m-%d') %}
+            {{ ['Mandag','Tirsdag','Onsdag','Torsdag','Fredag','Lørdag','Søndag'][d.isocalendar()[2]-1] }}
+        date_of_the_month:
+          value_template: >
+            {% set d = strptime(states('sensor.date'), '%Y-%m-%d') %}
+            {{ d.day }}
+        time_of_day:
+          value_template: >
+            {% set t = strptime(states('sensor.time'), '%H:%M') %}
+            {% if t.hour < 6 %}
+              natt
+            {% elif t.hour < 9 %}
+              morgen
+            {% elif t.hour < 12 %}
+              formiddag
+            {% elif t.hour < 18 %}
+              ettermiddag
+            {% else %}
+              kveld
+            {% endif %}
+        month:
+          value_template: >
+            {% set d = strptime(states('sensor.date'), '%Y-%m-%d') %}
+            {{ ['januar','februar','mars','april','mai','juni','juli','august','september','oktober','november','desember'][d.month-1] }}
+        month_short:
+          value_template: >
+            {% set d = strptime(states('sensor.date'), '%Y-%m-%d') %}
+            {{ ['jan','feb','mar','apr','mai','jun','jul','aug','sep','okt','nov','des'][d.month-1] }}
+        year:
+          value_template: >
+            {% set d = strptime(states('sensor.date'), '%Y-%m-%d') %}
+            {{ d.isocalendar()[0] }}
+        week_number:
+          value_template: >
+            {% set d = strptime(states('sensor.date'), '%Y-%m-%d') %}
+            {{ d.isocalendar()[1] }}
+        week_day_number:
+          value_template: >
+            {% set d = strptime(states('sensor.date'), '%Y-%m-%d') %}
+            {{ d.isocalendar()[2] }}
+
+        holiday:
+          friendly_name: "Hellidag"
+          value_template: >
+            {% if states('calendar.helligdager_i_norge') == 'on' %}
+              {{state_attr('calendar.helligdager_i_norge', 'message') }}
+            {% endif %}
+          icon_template: mdi:calendar-star
+        birthday:
+          friendly_name: "Bursdag"
+          value_template: >
+            {% if states('calendar.bursdager') == 'on' %}
+              {{state_attr('calendar.bursdager', 'message') }}
+            {% endif %}
+          icon_template: mdi:calendar-star
+
+        next_sunrise:
+          friendly_name: 'Soloppgang'
+          value_template: >
+            {{ as_timestamp(state_attr('sun.sun', 'next_rising')) | timestamp_custom('%H:%M:%S') }}
+          icon_template: mdi:weather-sunset-up
+        next_sunset:
+          friendly_name: 'Solnedgang'
+          value_template: >
+            {{ as_timestamp(state_attr('sun.sun', 'next_setting')) | timestamp_custom('%H:%M:%S') }}
+          icon_template: mdi:weather-sunset-down

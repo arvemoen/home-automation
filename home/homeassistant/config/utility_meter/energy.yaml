@@ -1,0 +1,55 @@
+# Varmepumpe energy consumption
+varmepumpe_energy_hourly:
+  source: sensor.varmepumpe_energibruk
+  cycle: hourly
+varmepumpe_energy_daily:
+  source: sensor.varmepumpe_energibruk
+  cycle: daily
+varmepumpe_energy_monthly:
+  source: sensor.varmepumpe_energibruk
+  cycle: monthly
+varmepumpe_energy_yearly:
+  source: sensor.varmepumpe_energibruk
+  cycle: yearly
+
+# Spisestue energy consumption
+spisestue_energy_hourly:
+  source: sensor.spisestuee_energibruk
+  cycle: hourly
+spisestue_energy_daily:
+  source: sensor.spisestue_energibruk
+  cycle: daily
+spisestue_energy_monthly:
+  source: sensor.spisestue_energibruk
+  cycle: monthly
+spisestue_energy_yearly:
+  source: sensor.spisestue_energibruk
+  cycle: yearly
+
+# Kontor energy consumption
+kontor_energy_hourly:
+  source: sensor.kontor_energibruk
+  cycle: hourly
+kontor_energy_daily:
+  source: sensor.kontore_energibruk
+  cycle: daily
+kontor_energy_monthly:
+  source: sensor.kontor_energibruk
+  cycle: monthly
+kontor_energy_yearly:
+  source: sensor.kontor_energibruk
+  cycle: yearly
+
+# Stue energy consumption
+stue_energy_hourly:
+  source: sensor.stue_energibruk
+  cycle: hourly
+stue_energy_daily:
+  source: sensor.stue_energibruk
+  cycle: daily
+stue_energy_monthly:
+  source: sensor.stue_energibruk
+  cycle: monthly
+stue_energy_yearly:
+  source: sensor.stue_energibruk
+  cycle: yearly

@@ -1,36 +1,28 @@
-- id: '1641974086153'
-  alias: Low battery level detection & notification for all battery sensors
+- id: '1667350797969'
+  alias: Freezer temperature OK
   description: ''
-  use_blueprint:
-    path: homeassistant/notify_low_battery.yaml
-    input:
-      threshold: 15
-      actions:
-      - service: notify.mobile_app_arve_sin_iphone
-        data:
-          title: Batteri snart tomt
-          message: '{{ sensor }}'
-- id: '1641974531474'
-  alias: Low battery level detection & notification for all battery sensors
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.fryser_temperature
+    below: -18
+  condition: []
+  action:
+  - service: notify.mobile_app_arve_sin_iphone
+    data_template:
+      title: Temperatur i fryser er OK
+      message: Temperaturen er nå {{ states('sensor.fryser_temperature') }} ºC
+  mode: single
+- id: '1667350881512'
+  alias: Freezer temperature OK
   description: ''
-  use_blueprint:
-    path: homeassistant/notify_low_battery.yaml
-    input:
-      threshold: 15
-      actions:
-      - service: notify.mobile_app_arve_sin_iphone
-        data:
-          title: Batteri snart tomt
-          message: '{{sensors|replace("_"," ")}}'
-- id: '1641974753779'
-  alias: Low battery level
-  description: ''
-  use_blueprint:
-    path: homeassistant/notify_low_battery.yaml
-    input:
-      threshold: 15
-      actions:
-      - service: notify.mobile_app_arve_sin_iphone
-        data:
-          title: Batteri snart tomt
-          message: '{{sensors|replace("_"," ")}}'
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.fryser_temperature
+    below: -18
+  condition: []
+  action:
+  - service: notify.mobile_app_arve_sin_iphone
+    data_template:
+      title: Temperatur i fryser er OK
+      message: Temperaturen er nå {{ states('sensor.fryser_temperature') }} ºC
+  mode: single

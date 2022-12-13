@@ -1,0 +1,122 @@
+# Get real speedtest data from json-file produced by scheduled execution of speedtest cli at 
+# regular intervals outside the docker container. The folder must be on a shared docker volume
+# and defined in the "allowlist_external_dirs:"-section in configuration.yaml
+# Please note that the file platform only reads the last line of the file, so all ending CRLF must be removed.
+# See /config/file_dump/run_speedtest.cmd for how to run speedtest cli
+
+speedtest_package:
+
+  # Speedtest sensors
+  sensor:
+
+    - platform: file
+      name: real_speedtest_download
+      file_path: /config/file_dump/speedtest.json
+      value_template: "{{ '{0:,.0f}'.format(value_json['download']['bandwidth'] |float / 125000) }}"
+      unit_of_measurement: 'Mbps'
+
+    - platform: file
+      name: real_speedtest_upload
+      file_path: /config/file_dump/speedtest.json
+      value_template: "{{ '{0:,.0f}'.format(value_json['upload']['bandwidth'] |float / 125000) }}"
+      unit_of_measurement: 'Mbps'
+
+    - platform: file
+      name: real_speedtest_ping
+      file_path: /config/file_dump/speedtest.json
+      value_template: "{{ value_json['ping']['latency'] | round(1) }}"
+      unit_of_measurement: 'ms'
+
+    - platform: file
+      name: real_speedtest_server_name
+      file_path: /config/file_dump/speedtest.json
+      value_template: "{{ value_json['server']['name'] }}"
+
+    - platform: file
+      name: real_speedtest_server_location
+      file_path: /config/file_dump/speedtest.json
+      value_template: "{{ value_json['server']['location'] }}"
+
+    # Get real speedtest min and max values from statistics
+
+    - platform: statistics
+      name: real_speedtest_ping_min
+      entity_id: sensor.real_speedtest_ping
+      state_characteristic: value_min
+      precision: 2 
+      sampling_size: 48
+      max_age:
+        hours: 24
+
+    - platform: statistics
+      name: real_speedtest_ping_max
+      entity_id: sensor.real_speedtest_ping
+      state_characteristic: value_max
+      precision: 2 
+      sampling_size: 48
+      max_age:
+        hours: 24
+
+
+    - platform: statistics
+      name: real_speedtest_download_min
+      entity_id: sensor.real_speedtest_download
+      state_characteristic: value_min
+      precision: 0 
+      sampling_size: 48
+      max_age:
+        hours: 24
+
+    - platform: statistics
+      name: real_speedtest_download_max
+      entity_id: sensor.real_speedtest_download
+      state_characteristic: value_max
+      precision: 0 
+      sampling_size: 48
+      max_age:
+        hours: 24
+
+
+    - platform: statistics
+      name: real_speedtest_upload_min
+      entity_id: sensor.real_speedtest_upload
+      state_characteristic: value_min
+      precision: 0 
+      sampling_size: 48
+      max_age:
+        hours: 24
+
+    - platform: statistics
+      name: real_speedtest_upload_max
+      entity_id: sensor.real_speedtest_upload
+      state_characteristic: value_max
+      precision: 0 
+      sampling_size: 48
+      max_age:
+        hours: 24
+
+  # Create speedtest automations 
+  automation:
+
+    # Network speed dropped
+    - alias: "Network speed notification"
+      trigger:
+        platform: numeric_state
+        entity_id: sensor.real_speedtest_download
+        below: 100
+      action:
+        service: notify.mobile_app_arve_sin_iphone
+        data_template:
+          title: Netverkshastighet redusert 
+          message: "Nedlastingshastigheten er nå {{ states('sensor.real_speedtest_download') }} Mbps"
+    # Network speed ok again
+    - alias: "Network speed notification OK"
+      trigger:
+        platform: numeric_state
+        entity_id: sensor.real_speedtest_download
+        above: 100
+      action:
+        service: notify.mobile_app_arve_sin_iphone
+        data_template:
+          title: Netverkshastighet er OK   
+          message: "Nedlastingshastigheten er nå {{ states('sensor.real_speedtest_download') }} Mbps"

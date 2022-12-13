@@ -55,6 +55,32 @@ sensor:
     filters:
       - multiply: 0.01
 
+  # - platform: modbus_controller
+  #   modbus_controller_id: epever
+  #   id: energy_consumed_today
+  #   name: ${friendly_name} energy consumed today
+  #   address: 0x3304
+  #   register_type: read
+  #   value_type: U_DWORD_R
+  #   unit_of_measurement: "Wh"
+  #   device_class: energy
+  #   accuracy_decimals: 1
+  #   filters:
+  #     - multiply: 10.0
+
+  # - platform: modbus_controller
+  #   modbus_controller_id: epever
+  #   id: energy_generated_today
+  #   name: ${friendly_name} energy generated today
+  #   address: 0x330C
+  #   register_type: read
+  #   value_type: U_DWORD_R
+  #   unit_of_measurement: "Wh"
+  #   device_class: energy
+  #   accuracy_decimals: 1
+  #   filters:
+  #     - multiply: 10.0
+
   - platform: modbus_controller
     modbus_controller_id: epever
     id: battery_voltage
